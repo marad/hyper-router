@@ -37,16 +37,16 @@ impl Router {
     }
 
     fn find_handler(&self, uri: &RequestUri) -> Handler {
-        let copied_uri = uri.clone();
-        self.routes.iter().find(move |route| {
-                if let AbsolutePath(ref path) = copied_uri {
-                    path.clone() == route.path.clone()
-                } else {
-                    false
-                }
-            })
-            .map(|route| route.handler)
-            .unwrap_or(Router::default_404_handler)
+        if let AbsolutePath(path) = uri.clone() {
+            self.routes.iter().find(|route| {
+                    path == route.path
+                })
+                .map(|route| route.handler)
+                .unwrap_or(Router::default_404_handler)
+        } else {
+            // TODO: this should probably be different error (unsupported)
+            Router::default_404_handler
+        }
     }
 }
 

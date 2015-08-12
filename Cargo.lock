@@ -1,6 +1,6 @@
 [root]
-name = "rest"
-version = "0.1.0"
+name = "hyper-router"
+version = "0.0.1"
 dependencies = [
  "hyper 0.6.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
