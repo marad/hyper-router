@@ -31,12 +31,7 @@ impl Router {
         response.send(b"page not found").unwrap();
     }
 
-    pub fn handle(&self, request: Request, mut response: Response) {
-        let handler = self.find_handler(&request.uri);
-        handler(request, response);
-    }
-
-    fn find_handler(&self, uri: &RequestUri) -> Handler {
+    pub fn find_handler(&self, uri: &RequestUri) -> Handler {
         if let AbsolutePath(path) = uri.clone() {
             self.routes.iter().find(|route| {
                     path == route.path

@@ -41,6 +41,7 @@ fn main() {
     
     Server::http("0.0.0.0:8080").unwrap()
         .handle(move |request: Request, response: Response| {
-            router.handle(request, response);
+            let handler = router.find_handler(&request.uri);
+            handler(request, response);
         }).unwrap();
 }
