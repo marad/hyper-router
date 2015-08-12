@@ -5,4 +5,5 @@ authors = ["Marcin Radoszewski <moriturius@gmail.com>"]
 
 [dependencies]
 hyper = "*"
+regex = "*"
 rustc-serialize = "*"
