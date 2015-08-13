@@ -3,6 +3,10 @@ name = "hyper-router"
 version = "0.0.1"
 authors = ["Marcin Radoszewski <moriturius@gmail.com>"]
 
+[lib]
+name = "hyper_router"
+path = "src/lib.rs"
+
 [dependencies]
 hyper = "*"
 regex = "*"
