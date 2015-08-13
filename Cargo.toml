@@ -6,6 +6,7 @@ description = "Simple routing middleware for Hyper http library."
 repository = "https://github.com/marad/hyper-router"
 keywords = ["hyper", "router", "routing", "middleware"]
 #documentation = "Not ready yet"
+license = "MIT"
 
 [[bin]]
 name = "router_test"
