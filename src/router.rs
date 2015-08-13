@@ -11,9 +11,23 @@ use self::regex::Regex;
 
 pub type Handler = fn(Request, Response);
 
+#[derive(Debug)]
+pub struct Path {
+    pub matcher: Regex
+}
+
+impl Path {
+    fn new(path: &str) {
+        let regex = "^".to_string();
+        regex.push_str(path);
+        regex.push_str("$");
+        Path { matcher: Regex::new(regex) }
+    }
+}
+
 pub struct Route {
     pub method: Method,
-    pub path: String,
+    pub path: Path,
     pub handler: Handler
 }
 
@@ -74,8 +88,9 @@ impl Router {
         self.routes.iter()
             .filter(|route| {
                 // TODO: matcher should probably be in Route struct?
-                let regex = Regex::new(&route.path).unwrap();
-                regex.is_match(&request_path)
+                //let regex = Regex::new(&route.path).unwrap();
+                //regex.is_match(&request_path)
+                route.path.matcher.is_match(&request_path)
             })
             .collect()
     }
@@ -117,12 +132,14 @@ mod tests {
         let router = RouterBuilder::new()
             .add(Route {
                 method: Get,
-                path: "/hello".to_string(),
+                //path: "/hello".to_string(),
+                path: Path::new("/hello"),
                 handler: test_handler
             })
             .add(Route {
                 method: Post,
-                path: "/test".to_string(),
+                //path: "/test".to_string(),
+                path: Path::new("/test"),
                 handler: test_handler
             })
             .build();

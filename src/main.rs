@@ -10,7 +10,7 @@ use hyper::status::StatusCode;
 use hyper::method::Method::{Get,Post};
 use rustc_serialize::json;
 
-use router::{Route, Router, RouterBuilder};
+use router::{Route, Router, RouterBuilder, Path};
 
 #[derive(RustcDecodable, RustcEncodable)]
 struct Person {
@@ -42,12 +42,14 @@ fn main() {
     let router = RouterBuilder::new()
         .add(Route {
             method: Get,
-            path: "^/hello$".to_string(),
+            //path: "^/hello$".to_string(),
+            path: Path::new("/hello"),
             handler: request_handler
         })
         .add(Route {
             method: Post,
-            path: "^/echo$".to_string(),
+            //path: "^/echo$".to_string(),
+            path: Path::new("/echo"),
             handler: echo_handler
         })
         .build();
