@@ -3,11 +3,15 @@ name = "hyper-router"
 version = "0.0.1"
 authors = ["Marcin Radoszewski <moriturius@gmail.com>"]
 
+[[bin]]
+name = "router_test"
+path = "tests/main.rs"
+
 [lib]
 name = "hyper_router"
 path = "src/lib.rs"
 
 [dependencies]
-hyper = "*"
-regex = "*"
+hyper = "^0.6.8"
+regex = "^0.1.41"
 rustc-serialize = "*"

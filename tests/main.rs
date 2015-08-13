@@ -1,13 +1,12 @@
 extern crate hyper;
+extern crate hyper_router;
 extern crate rustc_serialize;
-
-mod router;
 
 use std::io::prelude::*;
 use hyper::server::{Server, Request, Response};
 use hyper::method::Method::{Get,Post};
 use rustc_serialize::json;
-use router::{Route, RouterBuilder, Path};
+use hyper_router::{Route, RouterBuilder, Path};
 
 #[derive(RustcDecodable, RustcEncodable)]
 struct Person {
