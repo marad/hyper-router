@@ -2,6 +2,9 @@
 name = "hyper-router"
 version = "0.0.1"
 authors = ["Marcin Radoszewski <moriturius@gmail.com>"]
+description = "Simple routing middleware for Hyper http library."
+repository = "https://github.com/marad/hyper-router"
+keywords = ["hyper", "router", "routing", "middleware"]
 
 [[bin]]
 name = "router_test"
