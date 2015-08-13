@@ -3,14 +3,11 @@ extern crate rustc_serialize;
 
 mod router;
 
-use std::io;
 use std::io::prelude::*;
 use hyper::server::{Server, Request, Response};
-use hyper::status::StatusCode;
 use hyper::method::Method::{Get,Post};
 use rustc_serialize::json;
-
-use router::{Route, Router, RouterBuilder, Path};
+use router::{Route, RouterBuilder, Path};
 
 #[derive(RustcDecodable, RustcEncodable)]
 struct Person {
@@ -18,7 +15,7 @@ struct Person {
     age: i32,
 }
 
-fn request_handler(req: Request, mut res: Response) {
+fn request_handler(_: Request, res: Response) {
         let person = Person { 
             name: "Stefan".to_string(), 
             age: 45,
@@ -32,9 +29,9 @@ fn request_handler(req: Request, mut res: Response) {
         //).unwrap();
 }
 
-fn echo_handler(mut req: Request, mut res: Response) {
+fn echo_handler(mut req: Request, res: Response) {
     let mut body = String::new();
-    req.read_to_string(&mut body);
+    req.read_to_string(&mut body).unwrap();
     res.send(body.as_bytes()).unwrap();
 }
 
@@ -42,14 +39,12 @@ fn main() {
     let router = RouterBuilder::new()
         .add(Route {
             method: Get,
-            //path: "^/hello$".to_string(),
             path: Path::new("/hello"),
             handler: request_handler
         })
         .add(Route {
             method: Post,
-            //path: "^/echo$".to_string(),
-            path: Path::new("/echo"),
+            path: Path::new(r"/echo/\d{1,5}"),
             handler: echo_handler
         })
         .build();

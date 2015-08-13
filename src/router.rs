@@ -1,9 +1,7 @@
 extern crate regex;
 
 use hyper::method::Method;
-use hyper::method::Method::{Get, Post};
 use hyper::server::{Request, Response};
-use hyper::uri::RequestUri;
 use hyper::uri::RequestUri::AbsolutePath;
 use hyper::status::StatusCode;
 use std::fmt;
@@ -17,11 +15,11 @@ pub struct Path {
 }
 
 impl Path {
-    fn new(path: &str) {
-        let regex = "^".to_string();
+    pub fn new(path: &str) -> Path {
+        let mut regex = "^".to_string();
         regex.push_str(path);
         regex.push_str("$");
-        Path { matcher: Regex::new(regex) }
+        Path { matcher: Regex::new(&regex).unwrap() }
     }
 }
 
@@ -39,18 +37,17 @@ impl fmt::Debug for Route {
 
 #[derive(Debug)]
 pub struct Router {
-    routes: Vec<Route>,
+    routes: Vec<Route>
 }
 
 
 impl Router {
-
-    pub fn default_404_handler(request: Request, mut response: Response) {
+    pub fn default_404_handler(_: Request, mut response: Response) {
         {*response.status_mut() = StatusCode::NotFound}
         response.send(b"page not found").ok();
     }
 
-    pub fn method_not_supported_handler(request: Request, mut response: Response) {
+    pub fn method_not_supported_handler(_: Request, mut response: Response) {
         {*response.status_mut() = StatusCode::MethodNotAllowed}
         response.send(b"method not supported").ok();
     }
@@ -84,12 +81,9 @@ impl Router {
         }
     }
 
-    fn find_matching_routes(&self, request_path: &str) -> Vec<&Route> {
+    pub fn find_matching_routes(&self, request_path: &str) -> Vec<&Route> {
         self.routes.iter()
             .filter(|route| {
-                // TODO: matcher should probably be in Route struct?
-                //let regex = Regex::new(&route.path).unwrap();
-                //regex.is_match(&request_path)
                 route.path.matcher.is_match(&request_path)
             })
             .collect()
@@ -117,33 +111,31 @@ impl RouterBuilder {
 }
 
 
-#[cfg(test)]
-mod tests {
-    use hyper::method::Method::{Get,Post};
-    use hyper::server::{Request, Response};
-    use super::{Route, RouterBuilder};
-
-    fn test_handler(req: Request, mut res: Response) {
-        res.send(b"Hello World").unwrap();
-    }
-
-    #[test]
-    fn test_api() {
-        let router = RouterBuilder::new()
-            .add(Route {
-                method: Get,
-                //path: "/hello".to_string(),
-                path: Path::new("/hello"),
-                handler: test_handler
-            })
-            .add(Route {
-                method: Post,
-                //path: "/test".to_string(),
-                path: Path::new("/test"),
-                handler: test_handler
-            })
-            .build();
-
-        println!("{:?}", router);
-    }
-}
+//#[cfg(test)]
+//mod tests {
+//    use hyper::method::Method::{Get,Post};
+//    use hyper::server::{Request, Response};
+//    use super::{Route, RouterBuilder};
+//
+//    fn test_handler(req: Request, mut res: Response) {
+//        res.send(b"Hello World").unwrap();
+//    }
+//
+//    #[test]
+//    fn test_api() {
+//        let router = RouterBuilder::new()
+//            .add(Route {
+//                method: Get,
+//                path: Path::new("/hello"),
+//                handler: test_handler
+//            })
+//            .add(Route {
+//                method: Post,
+//                path: Path::new("/test"),
+//                handler: test_handler
+//            })
+//            .build();
+//
+//        println!("{:?}", router);
+//    }
+//}
