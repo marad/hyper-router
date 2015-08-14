@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://marad.github.io/hyper-router")]
+#![doc(html_root_url = "https://marad.github.io/hyper-router/doc/hyper_router")]
 
 //! # Hyper Router
 //!
