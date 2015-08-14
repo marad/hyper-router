@@ -88,6 +88,23 @@ pub use self::builder::RouterBuilder;
 
 pub type Handler = fn(Request, Response);
 
+/// This is the one. The router.
+///
+/// Example usage:
+///
+/// ```rust
+/// let router = RouterBuilder::new()
+///     .add(Route {
+///         method: Get,
+///         path: Path::new(r"/person/\d+"),
+///         handler: some_handler
+///     })
+///     .build();
+///
+///  // later when processing request:
+///  let handler = router.find_handler(&request);
+///  handler(request, response);
+/// ```
 #[derive(Debug)]
 pub struct Router {
     routes: Vec<Route>

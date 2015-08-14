@@ -36,6 +36,9 @@ fn echo_handler(mut req: Request, res: Response) {
 
 fn main() {
     let router = RouterBuilder::new()
+        //.add(Route::get("/hello")
+        //     .with_params()
+        //     .using(request_handler))
         .add(Route {
             method: Get,
             path: Path::new("/hello"),
