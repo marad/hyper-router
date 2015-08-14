@@ -19,4 +19,3 @@ path = "src/lib.rs"
 [dependencies]
 hyper = "^0.6.8"
 regex = "^0.1.41"
-rustc-serialize = "*"

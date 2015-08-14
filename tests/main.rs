@@ -1,54 +1,18 @@
 extern crate hyper;
 extern crate hyper_router;
-extern crate rustc_serialize;
 
-use std::io::prelude::*;
 use hyper::server::{Server, Request, Response};
-use hyper::method::Method::{Get,Post};
-use rustc_serialize::json;
-use hyper_router::{Route, RouterBuilder, Path};
-
-#[derive(RustcDecodable, RustcEncodable)]
-struct Person {
-    name: String,
-    age: i32,
-}
+use hyper::method::Method;
+use hyper_router::{Route, RouterBuilder};
 
 fn request_handler(_: Request, res: Response) {
-        let person = Person { 
-            name: "Stefan".to_string(), 
-            age: 45,
-        };
-
-        res.send(&mut json::encode(&person).unwrap().as_bytes()).unwrap();
-
-        //io::copy(
-        //    &mut json::encode(&person).unwrap().as_bytes(),
-        //    &mut res.start().unwrap()
-        //).unwrap();
-}
-
-fn echo_handler(mut req: Request, res: Response) {
-    let mut body = String::new();
-    req.read_to_string(&mut body).unwrap();
-    res.send(body.as_bytes()).unwrap();
+        res.send(b"Hello World").unwrap();
 }
 
 fn main() {
     let router = RouterBuilder::new()
-        //.add(Route::get("/hello")
-        //     .with_params()
-        //     .using(request_handler))
-        .add(Route {
-            method: Get,
-            path: Path::new("/hello"),
-            handler: request_handler
-        })
-        .add(Route {
-            method: Post,
-            path: Path::new(r"/echo/\d{1,5}"),
-            handler: echo_handler
-        })
+        .add(Route::get("/hello").using(request_handler))
+        .add(Route::from(Method::Patch, "/asd").using(request_handler))
         .build();
     
     Server::http("0.0.0.0:8080").unwrap()

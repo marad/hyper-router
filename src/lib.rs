@@ -84,6 +84,7 @@ pub mod handlers;
 
 pub use self::path::Path;
 pub use self::route::Route;
+pub use self::route::RouteBuilder;
 pub use self::builder::RouterBuilder;
 
 pub type Handler = fn(Request, Response);
