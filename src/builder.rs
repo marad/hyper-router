@@ -20,11 +20,8 @@ impl RouterBuilder {
     /// Example:
     ///
     /// ```rust
-    /// builder.add(Route {
-    ///   method: Get,
-    ///   path: Path::new(r"/person/\d+"),
-    ///   handler: some_handler
-    /// });
+    /// builder.add(Route::get(r"/person/\d+").using(some_handler));
+    /// ```
     pub fn add(mut self, route: Route) -> RouterBuilder {
         self.routes.push(route);
         self

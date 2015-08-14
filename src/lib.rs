@@ -21,8 +21,7 @@
 //! extern crate hyper_router;
 //!
 //! use hyper::server::{Server, Request, Response};
-//! use hyper::method::Method::Get;
-//! use hyper_router::{Route, RouterBuilder, Path};
+//! use hyper_router::{Route, RouterBuilder};
 //!
 //! fn basic_handler(_: Request, res: Response) {
 //!   res.send(b"Hello World!").unwrap();
@@ -30,11 +29,7 @@
 //!
 //! fn main() {
 //!   let router = RouterBuilder::new()
-//!     .add(Route {
-//!       method: Get,
-//!       path: Path::new("/greet"),
-//!       handler: basic_handler
-//!     })
+//!     .add(Route::get("/greet").using(basic_handler))
 //!     .build();
 //!
 //!   Server::http("0.0.0.0:8080").unwrap()
@@ -78,7 +73,7 @@ use hyper::uri::RequestUri::AbsolutePath;
 use hyper::server::{Request, Response};
 
 mod path;
-mod route;
+pub mod route;
 mod builder;
 pub mod handlers;
 
@@ -90,22 +85,6 @@ pub use self::builder::RouterBuilder;
 pub type Handler = fn(Request, Response);
 
 /// This is the one. The router.
-///
-/// Example usage:
-///
-/// ```rust
-/// let router = RouterBuilder::new()
-///     .add(Route {
-///         method: Get,
-///         path: Path::new(r"/person/\d+"),
-///         handler: some_handler
-///     })
-///     .build();
-///
-///  // later when processing request:
-///  let handler = router.find_handler(&request);
-///  handler(request, response);
-/// ```
 #[derive(Debug)]
 pub struct Router {
     routes: Vec<Route>
