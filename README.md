@@ -68,4 +68,4 @@ I've created this little tool to help myself learn Rust and to avoid using big f
 like Iron or rustful. I just want to keep things simple.
 
 Obviously I could make some errors or bad design choices so I'm waiting for your feedback!
-You may create an issue at [project's bug tracker](https://github.com/marad/hyper-router/issues).
+Please contact me at moriturius at GMail. You may also create an issue at [project's bug tracker](https://github.com/marad/hyper-router/issues).
