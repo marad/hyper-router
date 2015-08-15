@@ -21,8 +21,8 @@ extern crate hyper;
 extern crate hyper_router;
 
 use hyper::server::{Server, Request, Response};
-use hyper::method::Method::Get;
-use hyper_router::{Route, RouterBuilder, Path};
+use hyper::status::StatusCode;
+use hyper_router::{Route, RouterBuilder};
 
 fn basic_handler(_: Request, res: Response) {
   res.send(b"Hello World!").unwrap();
@@ -30,17 +30,16 @@ fn basic_handler(_: Request, res: Response) {
 
 fn main() {
   let router = RouterBuilder::new()
-    .add(Route {
-      method: Get,
-      path: Path::new("/greet"),
-      handler: basic_handler
-    })
+    .add(Route::get("/greet").using(basic_handler))
     .build();
 
   Server::http("0.0.0.0:8080").unwrap()
     .handle(move |request: Request, response: Response| {
-      let handler = router.find_handler(&request);
-      handler(request, response);
+      match router.find_handler(&request) {
+        Ok(handler) => handler(request, response),
+        Err(StatusCode::NotFound) => response.send(b"not found").unwrap(),
+        Err(_) => response.send(b"some error").unwrap()
+      }
     }).unwrap();
 }
 ```
@@ -51,7 +50,7 @@ will be called.
 
 ## Things to note
 
-* `Path::new` method accepts regular expressions so you can match every path you please.
+* you can specify paths as regular expressions so you can match every path you please.
 * If you have request matching multiple paths the one that was first `add`ed will be chosen.
 * This library is in an early stage of development so there may be breaking changes comming
 (but I'll try as hard as I can not to break backwards compatibility or break it just a little -
@@ -60,7 +59,6 @@ I promise I'll try!).
 # Further Development
 
 * add the ability to distinguish requests by query parameters.
-* maybe some small API changes/upgrades
 
 # Waiting for your feedback
 

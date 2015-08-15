@@ -2,6 +2,7 @@ extern crate hyper;
 extern crate hyper_router;
 
 use hyper::server::{Server, Request, Response};
+use hyper::status::StatusCode;
 use hyper::method::Method;
 use hyper_router::{Route, RouterBuilder};
 
@@ -17,7 +18,10 @@ fn main() {
     
     Server::http("0.0.0.0:8080").unwrap()
         .handle(move |request: Request, response: Response| {
-            let handler = router.find_handler_with_defaults(&request);
-            handler(request, response);
+            match router.find_handler(&request) {
+                Ok(handler) => handler(request, response),
+                Err(StatusCode::NotFound) => response.send(b"not found").unwrap(),
+                Err(_) => response.send(b"some error").unwrap(),
+            }
         }).unwrap();
 }
