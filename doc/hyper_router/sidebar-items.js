@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["handlers",""]],"struct":[["Path","Represents a path in HTTP sense (starting from `/`)"],["Route","Holds route information"],["Router","This is the one. The router."],["RouterBuilder","Builder for a router"]],"type":[["Handler",""]]});
+initSidebarItems({"mod":[["handlers",""],["route",""]],"struct":[["Path","Represents a path in HTTP sense (starting from `/`)"],["Router","This is the one. The router."],["RouterBuilder","Builder for a router"]],"type":[["Handler",""],["HttpResult",""]]});

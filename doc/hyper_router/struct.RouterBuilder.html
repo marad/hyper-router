@@ -45,23 +45,26 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-152' class='srclink' href='../src/hyper_router/builder.rs.html#9-11' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-295' class='srclink' href='../src/hyper_router/builder.rs.html#9-11' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct RouterBuilder {
     // some fields omitted
 }</pre><div class='docblock'><p>Builder for a router</p>
 
 <p>Example usage:</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../hyper_router/struct.RouterBuilder.html' title='hyper_router::RouterBuilder'>RouterBuilder</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../hyper_router/struct.RouterBuilder.html' title='hyper_router::RouterBuilder'>RouterBuilder</a></code></h4>
-<h4 id='method.add' class='method'><code>fn <a href='#method.add' class='fnname'>add</a>(self, route: <a class='struct' href='../hyper_router/struct.Route.html' title='hyper_router::Route'>Route</a>) -&gt; <a class='struct' href='../hyper_router/struct.RouterBuilder.html' title='hyper_router::RouterBuilder'>RouterBuilder</a></code></h4>
+<h4 id='method.add' class='method'><code>fn <a href='#method.add' class='fnname'>add</a>(self, route: <a class='struct' href='../hyper_router/route/struct.Route.html' title='hyper_router::route::Route'>Route</a>) -&gt; <a class='struct' href='../hyper_router/struct.RouterBuilder.html' title='hyper_router::RouterBuilder'>RouterBuilder</a></code></h4>
 <div class='docblock'><p>Adds new <code>Route</code> for <code>Router</code> that is being built.</p>
 
 <p>Example:</p>
 <pre class='rust rust-example-rendered'>
-<span class='ident'>builder</span>.<span class='ident'>add</span>(<span class='ident'>Route</span> {
-  <span class='ident'>method</span>: <span class='ident'>Get</span>,
-  <span class='ident'>path</span>: <span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='string'>r&quot;/person/\d+&quot;</span>),
-  <span class='ident'>handler</span>: <span class='ident'>some_handler</span>
-});
+<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>server</span>::{<span class='ident'>Request</span>, <span class='ident'>Response</span>};
+<span class='kw'>use</span> <span class='ident'>hyper_router</span>::{<span class='ident'>Route</span>, <span class='ident'>RouterBuilder</span>};
+
+<span class='kw'>fn</span> <span class='ident'>some_handler</span>(_: <span class='ident'>Request</span>, _: <span class='ident'>Response</span>) {
+  <span class='comment'>// do something</span>
+}
+
+<span class='ident'>RouterBuilder</span>::<span class='ident'>new</span>().<span class='ident'>add</span>(<span class='ident'>Route</span>::<span class='ident'>get</span>(<span class='string'>r&quot;/person/\d+&quot;</span>).<span class='ident'>using</span>(<span class='ident'>some_handler</span>));
 </pre>
 </div><h4 id='method.build' class='method'><code>fn <a href='#method.build' class='fnname'>build</a>(self) -&gt; <a class='struct' href='../hyper_router/struct.Router.html' title='hyper_router::Router'>Router</a></code></h4>
 </div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../hyper_router/struct.RouterBuilder.html' title='hyper_router::RouterBuilder'>RouterBuilder</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='http://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>

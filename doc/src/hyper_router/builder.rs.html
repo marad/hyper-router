@@ -76,6 +76,10 @@
 <span id="34">34</span>
 <span id="35">35</span>
 <span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>Route</span>;
 <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>Router</span>;
@@ -98,12 +102,16 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Example:</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// builder.add(Route {</span>
-    <span class='doccomment'>///   method: Get,</span>
-    <span class='doccomment'>///   path: Path::new(r&quot;/person/\d+&quot;),</span>
-    <span class='doccomment'>///   handler: some_handler</span>
-    <span class='doccomment'>/// });</span>
+    <span class='doccomment'>/// ```ignore</span>
+    <span class='doccomment'>/// use hyper::server::{Request, Response};</span>
+    <span class='doccomment'>/// use hyper_router::{Route, RouterBuilder};</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// fn some_handler(_: Request, _: Response) {</span>
+    <span class='doccomment'>///   // do something</span>
+    <span class='doccomment'>/// }</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// RouterBuilder::new().add(Route::get(r&quot;/person/\d+&quot;).using(some_handler));</span>
+    <span class='doccomment'>/// ```</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>route</span>: <span class='ident'>Route</span>) <span class='op'>-&gt;</span> <span class='ident'>RouterBuilder</span> {
         <span class='self'>self</span>.<span class='ident'>routes</span>.<span class='ident'>push</span>(<span class='ident'>route</span>);
         <span class='self'>self</span>

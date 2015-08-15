@@ -45,9 +45,9 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-13' class='srclink' href='../src/hyper_router/path.rs.html#6-8' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-15' class='srclink' href='../src/hyper_router/path.rs.html#6-8' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Path {
-    pub matcher: <a class='enum' href='../regex/re/enum.Regex.html' title='regex::re::Regex'>Regex</a>,
+    pub matcher: <a class='enum' href='http://doc.rust-lang.org/regex/regex/re/enum.Regex.html' title='regex::re::Regex'>Regex</a>,
 }</pre><div class='docblock'><p>Represents a path in HTTP sense (starting from <code>/</code>)</p>
 </div><h2 class='fields'>Fields</h2>
 <table><tr class='stab '>
@@ -57,7 +57,8 @@
 <p>This method accepts regular expressions so you can 
 write something like this:</p>
 <pre class='rust rust-example-rendered'>
-<span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='string'>r&quot;/person/\d+&quot;</span>)
+<span class='kw'>use</span> <span class='ident'>hyper_router</span>::<span class='ident'>Path</span>;
+<span class='ident'>Path</span>::<span class='ident'>new</span>(<span class='string'>r&quot;/person/\d+&quot;</span>);
 </pre>
 
 <p>Note that you don&#39;t have to match beggining and end of the 

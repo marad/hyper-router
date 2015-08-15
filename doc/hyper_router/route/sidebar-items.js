@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Route","Holds route information"]]});
+initSidebarItems({"struct":[["Route","Holds route information"],["RouteBuilder",""]]});

@@ -69,6 +69,7 @@
 <span id="27">27</span>
 <span id="28">28</span>
 <span id="29">29</span>
+<span id="30">30</span>
 </pre><pre class='rust '>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>regex</span>;
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>regex</span>::<span class='ident'>Regex</span>;
@@ -85,8 +86,9 @@
     <span class='doccomment'>/// This method accepts regular expressions so you can </span>
     <span class='doccomment'>/// write something like this:</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// Path::new(r&quot;/person/\d+&quot;)</span>
+    <span class='doccomment'>/// ```no_run</span>
+    <span class='doccomment'>/// use hyper_router::Path;</span>
+    <span class='doccomment'>/// Path::new(r&quot;/person/\d+&quot;);</span>
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Note that you don&#39;t have to match beggining and end of the </span>
