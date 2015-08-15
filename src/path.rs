@@ -13,8 +13,9 @@ impl Path {
     /// This method accepts regular expressions so you can 
     /// write something like this:
     ///
-    /// ```rust
-    /// Path::new(r"/person/\d+")
+    /// ```no_run
+    /// use hyper_router::Path;
+    /// Path::new(r"/person/\d+");
     /// ```
     ///
     /// Note that you don't have to match beggining and end of the 

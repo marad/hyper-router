@@ -1,6 +1,6 @@
 [package]
 name = "hyper-router"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Marcin Radoszewski <moriturius@gmail.com>"]
 description = "Simple routing middleware for Hyper http library."
 repository = "https://github.com/marad/hyper-router"
@@ -9,8 +9,8 @@ documentation = "http://radoszewski.pl/hyper-router/doc/hyper_router/index.html"
 license = "MIT"
 
 [[bin]]
-name = "router_test"
-path = "tests/main.rs"
+name = "test-server"
+path = "test-server/main.rs"
 
 [lib]
 name = "hyper_router"

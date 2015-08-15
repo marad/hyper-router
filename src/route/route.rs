@@ -18,7 +18,9 @@ pub struct Route {
     ///
     /// This should be method that accepts Hyper's Request and Response:
     ///
-    /// ```rust
+    /// ```ignore
+    /// use hyper::server::{Request, Response};
+    ///
     /// fn hello_handler(_: Request, res: Response) {
     ///   res.send(b"Hello World").unwrap();
     /// }

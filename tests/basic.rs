@@ -2,7 +2,6 @@ extern crate hyper;
 extern crate hyper_router;
 
 use hyper_router::*;
-use hyper::method::Method::{Get,Post};
 use hyper::server::{Request, Response};
 
 fn test_handler(_: Request, res: Response) {
@@ -11,19 +10,17 @@ fn test_handler(_: Request, res: Response) {
 
 #[test]
 fn test_api() {
+    // given
     let router = RouterBuilder::new()
-        .add(Route {
-            method: Get,
-            path: Path::new("/hello"),
-            handler: test_handler
-        })
-        .add(Route {
-            method: Post,
-            path: Path::new("/test"),
-            handler: test_handler
-        })
+        .add(Route::get("/hello").using(test_handler))
     .build();
+    // how to mock request? :c
+    //let request = mock_request(Method::Get, "/hello");
 
-    println!("{:?}", router);
+    // when
+    //let handler = router.find_handler(&request);
+
+    // then
+    //assert_eq!(handler, test_handler);
 }
 

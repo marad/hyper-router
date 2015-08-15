@@ -19,8 +19,15 @@ impl RouterBuilder {
     ///
     /// Example:
     ///
-    /// ```rust
-    /// builder.add(Route::get(r"/person/\d+").using(some_handler));
+    /// ```ignore
+    /// use hyper::server::{Request, Response};
+    /// use hyper_router::{Route, RouterBuilder};
+    ///
+    /// fn some_handler(_: Request, _: Response) {
+    ///   // do something
+    /// }
+    ///
+    /// RouterBuilder::new().add(Route::get(r"/person/\d+").using(some_handler));
     /// ```
     pub fn add(mut self, route: Route) -> RouterBuilder {
         self.routes.push(route);
