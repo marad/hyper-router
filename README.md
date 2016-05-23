@@ -68,16 +68,3 @@ like Iron or rustful. I just want to keep things simple.
 Obviously I could make some errors or bad design choices so I'm waiting for your feedback!
 Please contact me at moriturius at GMail. You may also create an issue at [project's bug tracker](https://github.com/marad/hyper-router/issues).
 
-# Changelog
-
-v0.1.2
-- [cardoe](https://github.com/cardoe) added support for method OPTIONS, HEAD, TRACE and CONNECT
-
-v0.1.1
-- [clonejo](https://github.com/clonejo) updated the code to work with hyper 0.7
-
-v0.1.0
-- API changes
-
-v0.0.1
-- initial version
