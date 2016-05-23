@@ -1,6 +1,6 @@
 [package]
 name = "hyper-router"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Marcin Radoszewski <moriturius@gmail.com>"]
 description = "Simple routing middleware for Hyper http library."
 repository = "https://github.com/marad/hyper-router"
