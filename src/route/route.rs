@@ -29,6 +29,10 @@ pub struct Route {
 }
 
 impl Route {
+    pub fn options(path: &str) -> RouteBuilder {
+        Route::from(Method::Options, path)
+    }
+
     pub fn get(path: &str) -> RouteBuilder {
         Route::from(Method::Get, path)
     }
@@ -43,6 +47,18 @@ impl Route {
 
     pub fn delete(path: &str) -> RouteBuilder {
         Route::from(Method::Delete, path)
+    }
+
+    pub fn head(path: &str) -> RouteBuilder {
+        Route::from(Method::Head, path)
+    }
+
+    pub fn trace(path: &str) -> RouteBuilder {
+        Route::from(Method::Trace, path)
+    }
+
+    pub fn connect(path: &str) -> RouteBuilder {
+        Route::from(Method::Connect, path)
     }
 
     pub fn patch(path: &str) -> RouteBuilder {
