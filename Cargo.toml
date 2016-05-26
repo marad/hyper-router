@@ -5,7 +5,7 @@ authors = ["Marcin Radoszewski <moriturius@gmail.com>"]
 description = "Simple routing middleware for Hyper http library."
 repository = "https://github.com/marad/hyper-router"
 keywords = ["hyper", "router", "routing", "middleware"]
-documentation = "http://radoszewski.pl/hyper-router/doc/hyper_router/index.html"
+documentation = "http://radoszewski.pl/hyper-router/0.1.2/hyper_router/"
 license = "MIT"
 
 [[bin]]
