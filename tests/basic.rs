@@ -308,3 +308,27 @@ fn test_no_route() {
         Err(e) => assert_eq!(e, hyper::status::StatusCode::NotFound)
     }
 }
+
+
+#[test]
+fn test_regex_path() {
+    let mut stream = MockStream::new(
+        b"GET /foo/bar HTTP/1.1\r\n\
+        Host: www.example.com\r\n\
+        \r\n\\");
+
+    let mut stream: BufReader<&mut NetworkStream> = BufReader::new(&mut stream);
+    let addr = SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::new(1, 2, 3, 4), 1234));
+    let request = Request::new(&mut stream, addr);
+
+    fn handle_regex_foo(_: Request, _: Response) {};
+    fn handle_regex_bar(_: Request, _: Response) {};
+
+    let router = RouterBuilder::new()
+        .add(Route::get(r"/foo/.*?").using(handle_regex_foo))
+        .add(Route::get(r"/bar/.*?").using(handle_regex_bar))
+        .build();
+
+    let handler = router.find_handler(&request.unwrap()).unwrap();
+    assert!(handler as fn(_, _) == handle_regex_foo as fn(_, _));
+}
