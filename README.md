@@ -52,9 +52,8 @@ will be called.
 
 * you can specify paths as regular expressions so you can match every path you please.
 * If you have request matching multiple paths the one that was first `add`ed will be chosen.
-* This library is in an early stage of development so there may be breaking changes comming
-(but I'll try as hard as I can not to break backwards compatibility or break it just a little -
-I promise I'll try!).
+* ~~This library is in an early stage of development so there may be breaking changes comming.~~ -
+  it seems that the library is quite popular so I'm not going to do compatibility breaking changes.
 
 # Further Development
 
