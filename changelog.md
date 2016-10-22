@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.3
+- updated for hyper 0.9.10
+
 ## v0.1.2
 - [cardoe](https://github.com/cardoe) added support for method OPTIONS, HEAD, TRACE and CONNECT
 
