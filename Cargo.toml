@@ -17,5 +17,5 @@ name = "hyper_router"
 path = "src/lib.rs"
 
 [dependencies]
-hyper = "^0.9.10"
+hyper = "^0.10.5"
 regex = "^0.1.41"
