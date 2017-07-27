@@ -17,30 +17,66 @@
 //! to your dependencies.
 //!
 //! ```no_run
+//! extern crate futures;
 //! extern crate hyper;
 //! extern crate hyper_router;
 //!
-//! use hyper::server::{Server, Request, Response};
-//! use hyper::status::StatusCode;
-//! use hyper_router::{Route, RouterBuilder};
+//! use futures::future::FutureResult;
+//! use hyper::server::{Http, Service, Request, Response};
+//! use hyper::StatusCode;
+//! use hyper::header::{ContentLength, ContentType};
+//! use hyper_router::{Route, Router, RouterBuilder};
+//! 
+//! fn basic_handler(_: Request) -> Response {
+//!     let body = "Hello World";
+//!     Response::new()
+//!         .with_header(ContentLength(body.len() as u64))
+//!         .with_header(ContentType::plaintext())
+//!         .with_body(body)
+//! }
 //!
-//! fn basic_handler(_: Request, res: Response) {
-//!   res.send(b"Hello World!").unwrap();
+//! struct RouterService {
+//!     router: Router
+//! }
+//!
+//! impl RouterService {
+//!     fn new() -> RouterService {
+//!         let router = RouterBuilder::new()
+//!             .add(Route::get("/greet").using(basic_handler))
+//!             .build();
+//!         RouterService {
+//!             router
+//!         }
+//!     }
+//! }
+//!
+//! impl Service for RouterService {
+//!     type Request = Request;
+//!     type Response = Response;
+//!     type Error = hyper::Error;
+//!     type Future = FutureResult<Response, hyper::Error>;
+//!
+//!     fn call(&self, request: Request) -> Self::Future {
+//!         futures::future::ok(
+//!             match self.router.find_handler(&request) {
+//!                 Ok(handler) => handler(request),
+//!                 Err(StatusCode::NotFound) => Response::new().with_status(StatusCode::NotFound),
+//!                 Err(_) => {
+//!                     let error = "some error";
+//!                     Response::new()
+//!                         .with_status(StatusCode::InternalServerError)
+//!                         .with_header(ContentLength(error.len() as u64))
+//!                         .with_body(error)
+//!                 }
+//!             }
+//!         )
+//!     }
 //! }
 //!
 //! fn main() {
-//!   let router = RouterBuilder::new()
-//!     .add(Route::get("/greet").using(basic_handler))
-//!     .build();
-//!
-//!   Server::http("0.0.0.0:8080").unwrap()
-//!     .handle(move |request: Request, response: Response| {
-//!       match router.find_handler(&request) {
-//!         Ok(handler) => handler(request, response),
-//!         Err(StatusCode::NotFound) => response.send(b"not found").unwrap(),
-//!         Err(_) => response.send(b"some error").unwrap()
-//!       }
-//!     }).unwrap();
+//!     let addr = "0.0.0.0:8080".parse().unwrap();
+//!     let server = Http::new().bind(&addr, || { Ok(RouterService::new()) }).unwrap();
+//!     server.run().unwrap();
 //! }
 //! ```
 //!
@@ -65,10 +101,10 @@
 //! You may create an issue at [project's bug tracker](https://github.com/marad/hyper-router/issues).
 
 extern crate hyper;
-use hyper::uri::RequestUri::AbsolutePath;
+
 use hyper::server::{Request, Response};
-use hyper::status::StatusCode;
-use hyper::method::Method;
+use hyper::StatusCode;
+use hyper::Method;
 
 mod path;
 pub mod route;
@@ -80,7 +116,7 @@ pub use self::route::Route;
 pub use self::route::RouteBuilder;
 pub use self::builder::RouterBuilder;
 
-pub type Handler = fn(Request, Response);
+pub type Handler = fn(Request) -> Response;
 pub type HttpResult<T> = Result<T,StatusCode>;
 
 /// This is the one. The router.
@@ -97,17 +133,13 @@ impl Router {
     /// If the request match some routes but http method does not match (used GET but routes are
     /// defined for POST) than default method not supported handler is returned.
     pub fn find_handler_with_defaults(&self, request: &Request) -> Handler {
-        if let AbsolutePath(request_path) = request.uri.clone() {
-            let matching_routes = self.find_matching_routes(&request_path);
-            match matching_routes.len() {
-                x if x <= 0 => handlers::default_404_handler,
-                _ => {
-                    self.find_for_method(&matching_routes, &request.method)
-                        .unwrap_or(handlers::method_not_supported_handler)
-                }
+        let matching_routes = self.find_matching_routes(request.path());
+        match matching_routes.len() {
+            x if x <= 0 => handlers::default_404_handler,
+            _ => {
+                self.find_for_method(&matching_routes, request.method())
+                    .unwrap_or(handlers::method_not_supported_handler)
             }
-        } else {
-            handlers::not_implemented_handler
         }
     }
 
@@ -117,18 +149,14 @@ impl Router {
     /// This method may return `NotFound`, `MethodNotAllowed` or `NotImplemented` 
     /// status codes.
     pub fn find_handler(&self, request: &Request) -> HttpResult<Handler> {
-        if let AbsolutePath(request_path) = request.uri.clone() {
-            let matching_routes = self.find_matching_routes(&request_path);
-            match matching_routes.len() {
-                x if x <= 0 => Err(StatusCode::NotFound),
-                _ => {
-                    self.find_for_method(&matching_routes, &request.method)
-                        .map(|handler| Ok(handler))
-                        .unwrap_or(Err(StatusCode::MethodNotAllowed))
-                }
+        let matching_routes = self.find_matching_routes(request.path());
+        match matching_routes.len() {
+            x if x <= 0 => Err(StatusCode::NotFound),
+            _ => {
+                self.find_for_method(&matching_routes, request.method())
+                    .map(|handler| Ok(handler))
+                    .unwrap_or(Err(StatusCode::MethodNotAllowed))
             }
-        } else {
-            Err(StatusCode::NotImplemented)
         }
     }
 

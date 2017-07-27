@@ -1,4 +1,4 @@
-use hyper::method::Method;
+use hyper::Method;
 use handlers;
 use std::fmt;
 
@@ -20,9 +20,14 @@ pub struct Route {
     ///
     /// ```ignore
     /// use hyper::server::{Request, Response};
+    /// use hyper::header::{ContentLength, ContentType};
     ///
-    /// fn hello_handler(_: Request, res: Response) {
-    ///   res.send(b"Hello World").unwrap();
+    /// fn hello_handler(_: Request) -> Response {
+    ///     let body = "Hello World";
+    ///     Response::new()
+    ///         .with_header(ContentLength(body.len() as u64))
+    ///         .with_header(ContentType::plaintext())
+    ///         .with_body(body)
     /// }
     /// ``` 
     pub handler: Handler

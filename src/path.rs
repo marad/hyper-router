@@ -27,4 +27,3 @@ impl Path {
         Path { matcher: Regex::new(&regex).unwrap() }
     }
 }
-
