@@ -17,15 +17,12 @@
 //! to your dependencies.
 //!
 //! ```no_run
-//! extern crate futures;
 //! extern crate hyper;
 //! extern crate hyper_router;
 //!
-//! use futures::future::FutureResult;
-//! use hyper::server::{Http, Service, Request, Response};
-//! use hyper::StatusCode;
+//! use hyper::server::{Http, Request, Response};
 //! use hyper::header::{ContentLength, ContentType};
-//! use hyper_router::{Route, Router, RouterBuilder};
+//! use hyper_router::{Route, RouterBuilder, RouterService};
 //! 
 //! fn basic_handler(_: Request) -> Response {
 //!     let body = "Hello World";
@@ -35,47 +32,16 @@
 //!         .with_body(body)
 //! }
 //!
-//! struct RouterService {
-//!     router: Router
-//! }
-//!
-//! impl RouterService {
-//!     fn new() -> RouterService {
-//!         let router = RouterBuilder::new()
-//!             .add(Route::get("/greet").using(basic_handler))
-//!             .build();
-//!         RouterService {
-//!             router
-//!         }
-//!     }
-//! }
-//!
-//! impl Service for RouterService {
-//!     type Request = Request;
-//!     type Response = Response;
-//!     type Error = hyper::Error;
-//!     type Future = FutureResult<Response, hyper::Error>;
-//!
-//!     fn call(&self, request: Request) -> Self::Future {
-//!         futures::future::ok(
-//!             match self.router.find_handler(&request) {
-//!                 Ok(handler) => handler(request),
-//!                 Err(StatusCode::NotFound) => Response::new().with_status(StatusCode::NotFound),
-//!                 Err(_) => {
-//!                     let error = "some error";
-//!                     Response::new()
-//!                         .with_status(StatusCode::InternalServerError)
-//!                         .with_header(ContentLength(error.len() as u64))
-//!                         .with_body(error)
-//!                 }
-//!             }
-//!         )
-//!     }
+//! fn router_service() -> Result<RouterService, std::io::Error> {
+//!     let router = RouterBuilder::new()
+//!         .add(Route::get("/greet").using(basic_handler))
+//!         .build();
+//!     Ok(RouterService::new(router))
 //! }
 //!
 //! fn main() {
 //!     let addr = "0.0.0.0:8080".parse().unwrap();
-//!     let server = Http::new().bind(&addr, || { Ok(RouterService::new()) }).unwrap();
+//!     let server = Http::new().bind(&addr, router_service).unwrap();
 //!     server.run().unwrap();
 //! }
 //! ```
@@ -100,9 +66,12 @@
 //! Obviously I could make some errors or bad design choices so I'm waiting for your feedback!
 //! You may create an issue at [project's bug tracker](https://github.com/marad/hyper-router/issues).
 
+extern crate futures;
 extern crate hyper;
 
-use hyper::server::{Request, Response};
+use futures::future::FutureResult;
+use hyper::header::ContentLength;
+use hyper::server::{Service, Request, Response};
 use hyper::StatusCode;
 use hyper::Method;
 
@@ -174,5 +143,49 @@ impl Router {
         routes.iter()
             .find(|route| route.method == method)
             .map(|route| route.handler)
+    }
+}
+
+/// The default simple router service.
+#[derive(Debug)]
+pub struct RouterService {
+    pub router: Router,
+    pub error_handler: fn(StatusCode) -> Response
+}
+
+impl RouterService {
+    pub fn new(router: Router) -> RouterService {
+        RouterService {
+            router,
+            error_handler: Self::default_error_handler
+        }
+    }
+
+    fn default_error_handler(status_code: StatusCode) -> Response {
+        let error = "Routing error: page not found";
+        let response = Response::new()
+            .with_header(ContentLength(error.len() as u64))
+            .with_body(error);
+
+        match status_code {
+            StatusCode::NotFound => response.with_status(StatusCode::NotFound),
+            _ => response.with_status(StatusCode::InternalServerError)
+        }
+    }
+}
+
+impl Service for RouterService {
+    type Request = Request;
+    type Response = Response;
+    type Error = hyper::Error;
+    type Future = FutureResult<Response, hyper::Error>;
+
+    fn call(&self, request: Request) -> Self::Future {
+        futures::future::ok(
+            match self.router.find_handler(&request) {
+                Ok(handler) => handler(request),
+                Err(status_code) => (self.error_handler)(status_code)
+            }
+        )
     }
 }
