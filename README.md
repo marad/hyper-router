@@ -4,7 +4,7 @@ This cargo is a small extension to the great Hyper HTTP library. It basically is
 adds the ability to define routes to request handlers and then query for the handlers
 by request path.
 
-[API Documentation](http://radoszewski.pl/hyper-router/0.3.0/hyper_router/)
+[API Documentation](http://radoszewski.pl/hyper-router/0.4.0/hyper_router/)
 
 ## Usage
 
