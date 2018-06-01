@@ -20,4 +20,3 @@ impl RouteBuilder {
         self.route
     }
 }
-

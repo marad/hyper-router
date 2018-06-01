@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.4
+- updated for hyper 0.11
+
 ## v0.1.3
 - updated for hyper 0.9.10
 

@@ -20,27 +20,30 @@ to your dependencies.
 extern crate hyper;
 extern crate hyper_router;
 
-use hyper::server::{Server, Request, Response};
-use hyper::status::StatusCode;
-use hyper_router::{Route, RouterBuilder};
+use hyper::server::{Http, Request, Response};
+use hyper::header::{ContentLength, ContentType};
+use hyper_router::{Route, RouterBuilder, RouterService};
 
-fn basic_handler(_: Request, res: Response) {
-  res.send(b"Hello World!").unwrap();
+fn basic_handler(_: Request) -> Response {
+    let body = "Hello World";
+    Response::new()
+        .with_header(ContentLength(body.len() as u64))
+        .with_header(ContentType::plaintext())
+        .with_body(body)
+}
+
+fn router_service() -> Result<RouterService, std::io::Error> {
+    let router = RouterBuilder::new()
+        .add(Route::get("/greet").using(basic_handler))
+        .build();
+
+    Ok(RouterService::new(router))
 }
 
 fn main() {
-  let router = RouterBuilder::new()
-    .add(Route::get("/greet").using(basic_handler))
-    .build();
-
-  Server::http("0.0.0.0:8080").unwrap()
-    .handle(move |request: Request, response: Response| {
-      match router.find_handler(&request) {
-        Ok(handler) => handler(request, response),
-        Err(StatusCode::NotFound) => response.send(b"not found").unwrap(),
-        Err(_) => response.send(b"some error").unwrap()
-      }
-    }).unwrap();
+    let addr = "0.0.0.0:8080".parse().unwrap();
+    let server = Http::new().bind(&addr, router_service).unwrap();
+    server.run().unwrap();
 }
 ```
 

@@ -23,7 +23,7 @@ impl RouterBuilder {
     /// use hyper::server::{Request, Response};
     /// use hyper_router::{Route, RouterBuilder};
     ///
-    /// fn some_handler(_: Request, _: Response) {
+    /// fn some_handler(_: Request) -> Response {
     ///   // do something
     /// }
     ///
