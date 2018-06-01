@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Route` struct in crate `hyper_router`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Route">
+
+    <title>hyper_router::route::Route - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct Route</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.method">method</a><a href="#structfield.path">path</a><a href="#structfield.handler">handler</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.options">options</a><a href="#method.get">get</a><a href="#method.post">post</a><a href="#method.put">put</a><a href="#method.delete">delete</a><a href="#method.head">head</a><a href="#method.trace">trace</a><a href="#method.connect">connect</a><a href="#method.patch">patch</a><a href="#method.from">from</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Default">Default</a><a href="#impl-Debug">Debug</a></div></div><p class='location'><a href='../index.html'>hyper_router</a>::<wbr><a href='index.html'>route</a></p><script>window.sidebarCurrent = {name: 'Route', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>hyper_router</a>::<wbr><a href='index.html'>route</a>::<wbr><a class="struct" href=''>Route</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/hyper_router/route/route.rs.html#10-34' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Route {
+    pub method: <a class="enum" href="https://docs.rs/hyper/0.11.1/hyper/method/enum.Method.html" title="enum hyper::method::Method">Method</a>,
+    pub path: <a class="struct" href="../../hyper_router/struct.Path.html" title="struct hyper_router::Path">Path</a>,
+    pub handler: <a class="type" href="../../hyper_router/type.Handler.html" title="type hyper_router::Handler">Handler</a>,
+}</pre><div class='docblock'><p>Holds route information</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.method" class="structfield small-section-header">
+                           <a href="#structfield.method" class="anchor field"></a>
+                           <span id="method.v" class='invisible'>
+                           <code>method: <a class="enum" href="https://docs.rs/hyper/0.11.1/hyper/method/enum.Method.html" title="enum hyper::method::Method">Method</a></code>
+                           </span></span><div class='docblock'><p>HTTP method to match</p>
+</div><span id="structfield.path" class="structfield small-section-header">
+                           <a href="#structfield.path" class="anchor field"></a>
+                           <span id="path.v" class='invisible'>
+                           <code>path: <a class="struct" href="../../hyper_router/struct.Path.html" title="struct hyper_router::Path">Path</a></code>
+                           </span></span><div class='docblock'><p>Path to match</p>
+</div><span id="structfield.handler" class="structfield small-section-header">
+                           <a href="#structfield.handler" class="anchor field"></a>
+                           <span id="handler.v" class='invisible'>
+                           <code>handler: <a class="type" href="../../hyper_router/type.Handler.html" title="type hyper_router::Handler">Handler</a></code>
+                           </span></span><div class='docblock'><p>Request handler</p>
+
+<p>This should be method that accepts Hyper&#39;s Request and Response:</p>
+
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">server</span>::{<span class="ident">Request</span>, <span class="ident">Response</span>};
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">ContentLength</span>, <span class="ident">ContentType</span>};
+
+<span class="kw">fn</span> <span class="ident">hello_handler</span>(_: <span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="ident">Response</span> {
+    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="string">&quot;Hello World&quot;</span>;
+    <span class="ident">Response</span>::<span class="ident">new</span>()
+        .<span class="ident">with_header</span>(<span class="ident">ContentLength</span>(<span class="ident">body</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>))
+        .<span class="ident">with_header</span>(<span class="ident">ContentType</span>::<span class="ident">plaintext</span>())
+        .<span class="ident">with_body</span>(<span class="ident">body</span>)
+}</pre>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../hyper_router/struct.Route.html" title="struct hyper_router::Route">Route</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#36-80' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.options' class="method"><span id='options.v' class='invisible'><code>pub fn <a href='#method.options' class='fnname'>options</a>(path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../hyper_router/struct.RouteBuilder.html" title="struct hyper_router::RouteBuilder">RouteBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#37-39' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.get' class="method"><span id='get.v' class='invisible'><code>pub fn <a href='#method.get' class='fnname'>get</a>(path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../hyper_router/struct.RouteBuilder.html" title="struct hyper_router::RouteBuilder">RouteBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#41-43' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.post' class="method"><span id='post.v' class='invisible'><code>pub fn <a href='#method.post' class='fnname'>post</a>(path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../hyper_router/struct.RouteBuilder.html" title="struct hyper_router::RouteBuilder">RouteBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#45-47' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.put' class="method"><span id='put.v' class='invisible'><code>pub fn <a href='#method.put' class='fnname'>put</a>(path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../hyper_router/struct.RouteBuilder.html" title="struct hyper_router::RouteBuilder">RouteBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#49-51' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.delete' class="method"><span id='delete.v' class='invisible'><code>pub fn <a href='#method.delete' class='fnname'>delete</a>(path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../hyper_router/struct.RouteBuilder.html" title="struct hyper_router::RouteBuilder">RouteBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#53-55' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.head' class="method"><span id='head.v' class='invisible'><code>pub fn <a href='#method.head' class='fnname'>head</a>(path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../hyper_router/struct.RouteBuilder.html" title="struct hyper_router::RouteBuilder">RouteBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#57-59' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.trace' class="method"><span id='trace.v' class='invisible'><code>pub fn <a href='#method.trace' class='fnname'>trace</a>(path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../hyper_router/struct.RouteBuilder.html" title="struct hyper_router::RouteBuilder">RouteBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#61-63' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.connect' class="method"><span id='connect.v' class='invisible'><code>pub fn <a href='#method.connect' class='fnname'>connect</a>(path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../hyper_router/struct.RouteBuilder.html" title="struct hyper_router::RouteBuilder">RouteBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#65-67' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.patch' class="method"><span id='patch.v' class='invisible'><code>pub fn <a href='#method.patch' class='fnname'>patch</a>(path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../hyper_router/struct.RouteBuilder.html" title="struct hyper_router::RouteBuilder">RouteBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#69-71' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.from' class="method"><span id='from.v' class='invisible'><code>pub fn <a href='#method.from' class='fnname'>from</a>(method: <a class="enum" href="https://docs.rs/hyper/0.11.1/hyper/method/enum.Method.html" title="enum hyper::method::Method">Method</a>, path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="../../hyper_router/struct.RouteBuilder.html" title="struct hyper_router::RouteBuilder">RouteBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#73-79' title='goto source code'>[src]</a></span></h4>
+</div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Default' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../../hyper_router/struct.Route.html" title="struct hyper_router::Route">Route</a></code><a href='#impl-Default' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#82-90' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class="struct" href="../../hyper_router/struct.Route.html" title="struct hyper_router::Route">Route</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#83-89' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../hyper_router/struct.Route.html" title="struct hyper_router::Route">Route</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#92-96' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper_router/route/route.rs.html#93-95' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "hyper_router";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>
