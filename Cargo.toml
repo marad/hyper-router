@@ -18,5 +18,6 @@ path = "src/lib.rs"
 
 [dependencies]
 futures = "^0.1"
-hyper = "^0.11"
+hyper = "^0.12"
 regex = "^0.2"
+http = "^0.1"

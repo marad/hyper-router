@@ -5,6 +5,8 @@ use std::fmt;
 use Path;
 use Handler;
 use super::RouteBuilder;
+use hyper::service::Service;
+use hyper::service::service_fn;
 
 /// Holds route information
 pub struct Route {
@@ -35,39 +37,39 @@ pub struct Route {
 
 impl Route {
     pub fn options(path: &str) -> RouteBuilder {
-        Route::from(Method::Options, path)
+        Route::from(Method::OPTIONS, path)
     }
 
     pub fn get(path: &str) -> RouteBuilder {
-        Route::from(Method::Get, path)
+        Route::from(Method::GET, path)
     }
 
     pub fn post(path: &str) -> RouteBuilder {
-        Route::from(Method::Post, path)
+        Route::from(Method::POST, path)
     }
 
     pub fn put(path: &str) -> RouteBuilder {
-        Route::from(Method::Put, path)
+        Route::from(Method::PUT, path)
     }
 
     pub fn delete(path: &str) -> RouteBuilder {
-        Route::from(Method::Delete, path)
+        Route::from(Method::DELETE, path)
     }
 
     pub fn head(path: &str) -> RouteBuilder {
-        Route::from(Method::Head, path)
+        Route::from(Method::HEAD, path)
     }
 
     pub fn trace(path: &str) -> RouteBuilder {
-        Route::from(Method::Trace, path)
+        Route::from(Method::TRACE, path)
     }
 
     pub fn connect(path: &str) -> RouteBuilder {
-        Route::from(Method::Connect, path)
+        Route::from(Method::CONNECT, path)
     }
 
     pub fn patch(path: &str) -> RouteBuilder {
-        Route::from(Method::Patch, path)
+        Route::from(Method::PATCH, path)
     }
 
     pub fn from(method: Method, path: &str) -> RouteBuilder {
@@ -80,9 +82,9 @@ impl Route {
 }
 
 impl Default for Route {
-    fn default() -> Route {
+    fn default() -> Self {
         Route {
-            method: Method::Get,
+            method: Method::GET,
             path: Path::new("/"),
             handler: handlers::not_implemented_handler
         }

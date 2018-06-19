@@ -20,10 +20,10 @@ impl RouterBuilder {
     /// Example:
     ///
     /// ```ignore
-    /// use hyper::server::{Request, Response};
+    /// use hyper::{Body, Request, Response};
     /// use hyper_router::{Route, RouterBuilder};
     ///
-    /// fn some_handler(_: Request) -> Response {
+    /// fn some_handler(_: Request<Body>) -> Response<Body> {
     ///   // do something
     /// }
     ///
