@@ -2,7 +2,7 @@ use super::Route;
 use super::Router;
 
 /// Builder for a router
-/// 
+///
 /// Example usage:
 ///
 #[derive(Debug)]
@@ -35,6 +35,8 @@ impl RouterBuilder {
     }
 
     pub fn build(self) -> Router {
-        Router { routes: self.routes }
+        Router {
+            routes: self.routes,
+        }
     }
 }

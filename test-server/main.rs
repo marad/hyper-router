@@ -1,12 +1,11 @@
 extern crate hyper;
 extern crate hyper_router;
 
-use hyper::server::Server;
-use hyper::{Body, Request, Response};
-use hyper::Method;
 use hyper::header::CONTENT_TYPE;
-use hyper_router::{Route, RouterBuilder, RouterService};
 use hyper::rt::Future;
+use hyper::server::Server;
+use hyper::{Body, Method, Request, Response};
+use hyper_router::{Route, RouterBuilder, RouterService};
 
 fn request_handler(_: Request<Body>) -> Response<Body> {
     let body = "Hello World";
