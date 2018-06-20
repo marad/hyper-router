@@ -8,7 +8,7 @@ pub struct RouteBuilder {
 impl RouteBuilder {
     pub fn new(route: Route) -> RouteBuilder {
         RouteBuilder {
-            route: route
+            route
         }
     }
 

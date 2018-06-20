@@ -5,8 +5,6 @@ use std::fmt;
 use Path;
 use Handler;
 use super::RouteBuilder;
-use hyper::service::Service;
-use hyper::service::service_fn;
 
 /// Holds route information
 pub struct Route {
@@ -74,7 +72,7 @@ impl Route {
 
     pub fn from(method: Method, path: &str) -> RouteBuilder {
         RouteBuilder::new(Route {
-            method: method,
+            method,
             path: Path::new(path),
             .. Route::default()
         })

@@ -75,9 +75,7 @@ extern crate http;
 
 use futures::future::FutureResult;
 use hyper::Body;
-use hyper::header::CONTENT_LENGTH;
 use hyper::service::Service;
-use hyper::service::service_fn;
 use hyper::{Request, Response};
 use hyper::StatusCode;
 use hyper::Method;
@@ -111,7 +109,7 @@ impl Router {
     pub fn find_handler_with_defaults(&self, request: &Request<Body>) -> Handler {
         let matching_routes = self.find_matching_routes(request.uri().path());
         match matching_routes.len() {
-            x if x <= 0 => handlers::default_404_handler,
+            x if x == 0 => handlers::default_404_handler,
             _ => {
                 self.find_for_method(&matching_routes, request.method())
                     .unwrap_or(handlers::method_not_supported_handler)
@@ -127,10 +125,10 @@ impl Router {
     pub fn find_handler(&self, request: &Request<Body>) -> HttpResult<Handler> {
         let matching_routes = self.find_matching_routes(request.uri().path());
         match matching_routes.len() {
-            x if x <= 0 => Err(StatusCode::NOT_FOUND),
+            x if x == 0 => Err(StatusCode::NOT_FOUND),
             _ => {
                 self.find_for_method(&matching_routes, request.method())
-                    .map(|handler| Ok(handler))
+                    .map(Ok)
                     .unwrap_or(Err(StatusCode::METHOD_NOT_ALLOWED))
             }
         }
@@ -145,7 +143,7 @@ impl Router {
             .collect()
     }
 
-    fn find_for_method(&self, routes: &Vec<&Route>, method: &Method) -> Option<Handler> {
+    fn find_for_method(&self, routes: &[&Route], method: &Method) -> Option<Handler> {
         let method = method.clone();
         routes.iter()
             .find(|route| route.method == method)
