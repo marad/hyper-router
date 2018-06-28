@@ -11,8 +11,8 @@ by request path.
 To use the library just add:
 
 ```
-hyper = "0.11"
-hyper-router = "0.4"
+hyper = "0.12"
+hyper-router = "0.5"
 ```
 
 to your dependencies.
@@ -21,16 +21,18 @@ to your dependencies.
 extern crate hyper;
 extern crate hyper_router;
 
-use hyper::server::{Http, Request, Response};
-use hyper::header::{ContentLength, ContentType};
+use hyper::header::CONTENT_TYPE;
+use hyper::rt::Future;
+use hyper::server::Server;
+use hyper::{Body, Method, Request, Response};
 use hyper_router::{Route, RouterBuilder, RouterService};
 
-fn basic_handler(_: Request) -> Response {
+fn basic_handler(_: Request<Body>) -> Response<Body> {
     let body = "Hello World";
-    Response::new()
-        .with_header(ContentLength(body.len() as u64))
-        .with_header(ContentType::plaintext())
-        .with_body(body)
+    Response::builder()
+        .header(CONTENT_TYPE, "text/plain")
+        .body(Body::from(body))
+        .expect("Failed to construct response")
 }
 
 fn router_service() -> Result<RouterService, std::io::Error> {
@@ -43,8 +45,12 @@ fn router_service() -> Result<RouterService, std::io::Error> {
 
 fn main() {
     let addr = "0.0.0.0:8080".parse().unwrap();
-    let server = Http::new().bind(&addr, router_service).unwrap();
-    server.run().unwrap();
+
+    let server = Server::bind(&addr)
+        .serve(router_service)
+        .map_err(|e| eprintln!("server error: {}", e));
+
+    hyper::rt::run(server);
 }
 ```
 
