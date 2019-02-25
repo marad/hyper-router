@@ -3,11 +3,10 @@ use super::Router;
 use std;
 
 /// Builder for a router
-/// 
+///
 /// Example usage:
 ///
-#[derive(Debug)]
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct RouterBuilder {
     routes: Vec<Route>,
 }
@@ -18,7 +17,9 @@ impl RouterBuilder {
     }
 
     pub fn build(self) -> Router {
-        Router { routes: self.routes }
+        Router {
+            routes: self.routes,
+        }
     }
 }
 

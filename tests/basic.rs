@@ -1,22 +1,32 @@
 extern crate hyper;
 extern crate hyper_router;
 
-use hyper_router::*;
 use hyper::server::{Request, Response};
 use hyper::Method;
 use hyper::Uri;
-use std::str::FromStr;
+use hyper_router::*;
 use std::ops::Add;
-
+use std::str::FromStr;
 
 #[test]
 fn test_get_route() {
-    let request = Request::new(Method::Get, Uri::from_str("http://www.example.com/hello").unwrap());
+    let request = Request::new(
+        Method::Get,
+        Uri::from_str("http://www.example.com/hello").unwrap(),
+    );
 
-    fn handle_get_hello(_: Request) -> Response { unimplemented!() };
-    fn handle_get_root(_: Request) -> Response { unimplemented!() };
-    fn handle_get_foo(_: Request) -> Response { unimplemented!() };
-    fn handle_post_hello(_: Request) -> Response { unimplemented!() };
+    fn handle_get_hello(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_get_root(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_get_foo(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_post_hello(_: Request) -> Response {
+        unimplemented!()
+    };
 
     let router = RouterBuilder::new()
         .add(Route::get("/hello").using(handle_get_hello))
@@ -29,15 +39,25 @@ fn test_get_route() {
     assert!(handler as fn(_) -> _ == handle_get_hello as fn(_) -> _);
 }
 
-
 #[test]
 fn test_post_route() {
-    let request = Request::new(Method::Post, Uri::from_str("http://www.example.com/hello").unwrap());
+    let request = Request::new(
+        Method::Post,
+        Uri::from_str("http://www.example.com/hello").unwrap(),
+    );
 
-    fn handle_post_hello(_: Request) -> Response { unimplemented!() };
-    fn handle_post_root(_: Request) -> Response { unimplemented!() };
-    fn handle_post_foo(_: Request) -> Response { unimplemented!() };
-    fn handle_get_hello(_: Request) -> Response { unimplemented!() };
+    fn handle_post_hello(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_post_root(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_post_foo(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_get_hello(_: Request) -> Response {
+        unimplemented!()
+    };
 
     let router = RouterBuilder::new()
         .add(Route::post("/hello").using(handle_post_hello))
@@ -50,13 +70,19 @@ fn test_post_route() {
     assert!(handler as fn(_) -> _ == handle_post_hello as fn(_) -> _);
 }
 
-
 #[test]
 fn test_delete_route() {
-    let request = Request::new(Method::Delete, Uri::from_str("http://www.example.com/hello").unwrap());
+    let request = Request::new(
+        Method::Delete,
+        Uri::from_str("http://www.example.com/hello").unwrap(),
+    );
 
-    fn handle_delete_hello(_: Request) -> Response { unimplemented!() };
-    fn handle_post_hello(_: Request) -> Response { unimplemented!() };
+    fn handle_delete_hello(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_post_hello(_: Request) -> Response {
+        unimplemented!()
+    };
 
     let router = RouterBuilder::new()
         .add(Route::delete("/hello").using(handle_delete_hello))
@@ -67,13 +93,19 @@ fn test_delete_route() {
     assert!(handler as fn(_) -> _ == handle_delete_hello as fn(_) -> _);
 }
 
-
 #[test]
 fn test_options_route() {
-    let request = Request::new(Method::Options, Uri::from_str("http://www.example.com/hello").unwrap());
+    let request = Request::new(
+        Method::Options,
+        Uri::from_str("http://www.example.com/hello").unwrap(),
+    );
 
-    fn handle_options_hello(_: Request) -> Response { unimplemented!() };
-    fn handle_post_hello(_: Request) -> Response { unimplemented!() };
+    fn handle_options_hello(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_post_hello(_: Request) -> Response {
+        unimplemented!()
+    };
 
     let router = RouterBuilder::new()
         .add(Route::options("/hello").using(handle_options_hello))
@@ -84,13 +116,19 @@ fn test_options_route() {
     assert!(handler as fn(_) -> _ == handle_options_hello as fn(_) -> _);
 }
 
-
 #[test]
 fn test_put_route() {
-    let request = Request::new(Method::Put, Uri::from_str("http://www.example.com/hello").unwrap());
+    let request = Request::new(
+        Method::Put,
+        Uri::from_str("http://www.example.com/hello").unwrap(),
+    );
 
-    fn handle_put_hello(_: Request) -> Response { unimplemented!() };
-    fn handle_post_hello(_: Request) -> Response { unimplemented!() };
+    fn handle_put_hello(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_post_hello(_: Request) -> Response {
+        unimplemented!()
+    };
 
     let router = RouterBuilder::new()
         .add(Route::put("/hello").using(handle_put_hello))
@@ -101,13 +139,19 @@ fn test_put_route() {
     assert!(handler as fn(_) -> _ == handle_put_hello as fn(_) -> _);
 }
 
-
 #[test]
 fn test_head_route() {
-    let request = Request::new(Method::Head, Uri::from_str("http://www.example.com/hello").unwrap());
+    let request = Request::new(
+        Method::Head,
+        Uri::from_str("http://www.example.com/hello").unwrap(),
+    );
 
-    fn handle_head_hello(_: Request) -> Response { unimplemented!() };
-    fn handle_post_hello(_: Request) -> Response { unimplemented!() };
+    fn handle_head_hello(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_post_hello(_: Request) -> Response {
+        unimplemented!()
+    };
 
     let router = RouterBuilder::new()
         .add(Route::head("/hello").using(handle_head_hello))
@@ -118,13 +162,19 @@ fn test_head_route() {
     assert!(handler as fn(_) -> _ == handle_head_hello as fn(_) -> _);
 }
 
-
 #[test]
 fn test_trace_route() {
-    let request = Request::new(Method::Trace, Uri::from_str("http://www.example.com/hello").unwrap());
+    let request = Request::new(
+        Method::Trace,
+        Uri::from_str("http://www.example.com/hello").unwrap(),
+    );
 
-    fn handle_trace_hello(_: Request) -> Response { unimplemented!() };
-    fn handle_post_hello(_: Request) -> Response { unimplemented!() };
+    fn handle_trace_hello(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_post_hello(_: Request) -> Response {
+        unimplemented!()
+    };
 
     let router = RouterBuilder::new()
         .add(Route::trace("/hello").using(handle_trace_hello))
@@ -135,13 +185,19 @@ fn test_trace_route() {
     assert!(handler as fn(_) -> _ == handle_trace_hello as fn(_) -> _);
 }
 
-
 #[test]
 fn test_patch_route() {
-    let request = Request::new(Method::Patch, Uri::from_str("http://www.example.com/hello").unwrap());
+    let request = Request::new(
+        Method::Patch,
+        Uri::from_str("http://www.example.com/hello").unwrap(),
+    );
 
-    fn handle_patch_hello(_: Request) -> Response { unimplemented!() };
-    fn handle_post_hello(_: Request) -> Response { unimplemented!() };
+    fn handle_patch_hello(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_post_hello(_: Request) -> Response {
+        unimplemented!()
+    };
 
     let router = RouterBuilder::new()
         .add(Route::patch("/hello").using(handle_patch_hello))
@@ -152,13 +208,19 @@ fn test_patch_route() {
     assert!(handler as fn(_) -> _ == handle_patch_hello as fn(_) -> _);
 }
 
-
 #[test]
 fn test_no_route() {
-    let request = Request::new(Method::Get, Uri::from_str("http://www.example.com/notfound").unwrap());
+    let request = Request::new(
+        Method::Get,
+        Uri::from_str("http://www.example.com/notfound").unwrap(),
+    );
 
-    fn handle_get_foo(_: Request) -> Response { unimplemented!() };
-    fn handle_get_bar(_: Request) -> Response { unimplemented!() };
+    fn handle_get_foo(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_get_bar(_: Request) -> Response {
+        unimplemented!()
+    };
 
     let router = RouterBuilder::new()
         .add(Route::patch("/foo").using(handle_get_foo))
@@ -169,17 +231,23 @@ fn test_no_route() {
 
     match handler {
         Ok(_) => panic!("Expected an error, but got a handler instead"),
-        Err(e) => assert_eq!(e, hyper::StatusCode::NotFound)
+        Err(e) => assert_eq!(e, hyper::StatusCode::NotFound),
     }
 }
 
-
 #[test]
 fn test_regex_path() {
-    let request = Request::new(Method::Get, Uri::from_str("http://www.example.com/foo/bar").unwrap());
+    let request = Request::new(
+        Method::Get,
+        Uri::from_str("http://www.example.com/foo/bar").unwrap(),
+    );
 
-    fn handle_regex_foo(_: Request) -> Response { unimplemented!() };
-    fn handle_regex_bar(_: Request) -> Response { unimplemented!() };
+    fn handle_regex_foo(_: Request) -> Response {
+        unimplemented!()
+    };
+    fn handle_regex_bar(_: Request) -> Response {
+        unimplemented!()
+    };
 
     let router = RouterBuilder::new()
         .add(Route::get(r"/foo/.*?").using(handle_regex_foo))
