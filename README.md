@@ -11,7 +11,8 @@ by request path.
 To use the library just add:
 
 ```
-hyper-router = "*"
+hyper = "0.11"
+hyper-router = "0.4"
 ```
 
 to your dependencies.
