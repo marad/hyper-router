@@ -1,9 +1,9 @@
 use hyper::Method;
-use handlers;
+use crate::handlers;
 use std::fmt;
 
-use Path;
-use Handler;
+use crate::Path;
+use crate::Handler;
 use super::RouteBuilder;
 
 /// Holds route information
