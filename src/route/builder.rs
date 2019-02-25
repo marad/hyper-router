@@ -1,5 +1,5 @@
-use Handler;
-use Route;
+use crate::Handler;
+use crate::Route;
 
 pub struct RouteBuilder {
     route: Route,
@@ -7,7 +7,7 @@ pub struct RouteBuilder {
 
 impl RouteBuilder {
     pub fn new(route: Route) -> RouteBuilder {
-        RouteBuilder { route: route }
+        RouteBuilder { route }
     }
 
     /// Completes the building process by taking the handler to process the request.

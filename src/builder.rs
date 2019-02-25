@@ -5,7 +5,7 @@ use super::Router;
 ///
 /// Example usage:
 ///
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct RouterBuilder {
     routes: Vec<Route>,
 }
@@ -29,6 +29,7 @@ impl RouterBuilder {
     ///
     /// RouterBuilder::new().add(Route::get(r"/person/\d+").using(some_handler));
     /// ```
+    #[allow(clippy::should_implement_trait)]
     pub fn add(mut self, route: Route) -> RouterBuilder {
         self.routes.push(route);
         self
