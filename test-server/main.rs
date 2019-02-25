@@ -5,7 +5,6 @@ use hyper::header::{ContentLength, ContentType};
 use hyper::server::{Http, Request, Response};
 use hyper::Method;
 use hyper_router::{Route, RouterBuilder, RouterService};
-use std::ops::Add;
 
 fn request_handler(_: Request) -> Response {
     let body = "Hello World";

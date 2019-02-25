@@ -23,7 +23,6 @@
 //! use hyper::server::{Http, Request, Response};
 //! use hyper::header::{ContentLength, ContentType};
 //! use hyper_router::{Route, RouterBuilder, RouterService};
-//! use std::ops::Add;
 //!
 //! fn basic_handler(_: Request) -> Response {
 //!     let body = "Hello World";

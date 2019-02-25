@@ -1,6 +1,5 @@
 use super::Route;
 use super::Router;
-use std;
 
 /// Builder for a router
 ///
@@ -16,16 +15,6 @@ impl RouterBuilder {
         RouterBuilder { routes: vec![] }
     }
 
-    pub fn build(self) -> Router {
-        Router {
-            routes: self.routes,
-        }
-    }
-}
-
-impl std::ops::Add<crate::route::Route> for RouterBuilder {
-    type Output = RouterBuilder;
-
     /// Adds new `Route` for `Router` that is being built.
     ///
     /// Example:
@@ -40,8 +29,15 @@ impl std::ops::Add<crate::route::Route> for RouterBuilder {
     ///
     /// RouterBuilder::new().add(Route::get(r"/person/\d+").using(some_handler));
     /// ```
-    fn add(mut self, route: Route) -> RouterBuilder {
+    #[allow(clippy::should_implement_trait)]
+    pub fn add(mut self, route: Route) -> RouterBuilder {
         self.routes.push(route);
         self
+    }
+
+    pub fn build(self) -> Router {
+        Router {
+            routes: self.routes,
+        }
     }
 }
