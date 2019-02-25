@@ -1,10 +1,10 @@
-use hyper::Method;
 use handlers;
+use hyper::Method;
 use std::fmt;
 
-use Path;
-use Handler;
 use super::RouteBuilder;
+use Handler;
+use Path;
 
 /// Holds route information
 pub struct Route {
@@ -29,8 +29,8 @@ pub struct Route {
     ///         .with_header(ContentType::plaintext())
     ///         .with_body(body)
     /// }
-    /// ``` 
-    pub handler: Handler
+    /// ```
+    pub handler: Handler,
 }
 
 impl Route {
@@ -74,7 +74,7 @@ impl Route {
         RouteBuilder::new(Route {
             method: method,
             path: Path::new(path),
-            .. Route::default()
+            ..Route::default()
         })
     }
 }
@@ -84,13 +84,17 @@ impl Default for Route {
         Route {
             method: Method::Get,
             path: Path::new("/"),
-            handler: handlers::not_implemented_handler
+            handler: handlers::not_implemented_handler,
         }
     }
 }
 
 impl fmt::Debug for Route {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Route {{method: {:?}, path: {:?}}}", self.method, self.path)
+        write!(
+            f,
+            "Route {{method: {:?}, path: {:?}}}",
+            self.method, self.path
+        )
     }
 }

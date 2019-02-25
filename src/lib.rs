@@ -8,8 +8,8 @@
 //!
 //! ## Usage
 //!
-//! To use the library just add: 
-//! 
+//! To use the library just add:
+//!
 //! ```text
 //! hyper-router = "*"
 //! ```
@@ -23,7 +23,7 @@
 //! use hyper::server::{Http, Request, Response};
 //! use hyper::header::{ContentLength, ContentType};
 //! use hyper_router::{Route, RouterBuilder, RouterService};
-//! 
+//!
 //! fn basic_handler(_: Request) -> Response {
 //!     let body = "Hello World";
 //!     Response::new()
@@ -55,7 +55,7 @@
 //! * `Path::new` method accepts regular expressions so you can match every path you please.
 //! * If you have request matching multiple paths the one that was first `add`ed will be chosen.
 //! * This library is in an early stage of development so there may be breaking changes comming
-//! (but I'll try as hard as I can not to break backwards compatibility or break it just a little - 
+//! (but I'll try as hard as I can not to break backwards compatibility or break it just a little -
 //! I promise I'll try!).
 //!
 //! # Waiting for your feedback
@@ -71,27 +71,27 @@ extern crate hyper;
 
 use futures::future::FutureResult;
 use hyper::header::ContentLength;
-use hyper::server::{Service, Request, Response};
-use hyper::StatusCode;
+use hyper::server::{Request, Response, Service};
 use hyper::Method;
+use hyper::StatusCode;
 
-mod path;
-pub mod route;
 mod builder;
 pub mod handlers;
+mod path;
+pub mod route;
 
+pub use self::builder::RouterBuilder;
 pub use self::path::Path;
 pub use self::route::Route;
 pub use self::route::RouteBuilder;
-pub use self::builder::RouterBuilder;
 
 pub type Handler = fn(Request) -> Response;
-pub type HttpResult<T> = Result<T,StatusCode>;
+pub type HttpResult<T> = Result<T, StatusCode>;
 
 /// This is the one. The router.
 #[derive(Debug)]
 pub struct Router {
-    routes: Vec<Route>
+    routes: Vec<Route>,
 }
 
 impl Router {
@@ -105,42 +105,40 @@ impl Router {
         let matching_routes = self.find_matching_routes(request.path());
         match matching_routes.len() {
             x if x <= 0 => handlers::default_404_handler,
-            _ => {
-                self.find_for_method(&matching_routes, request.method())
-                    .unwrap_or(handlers::method_not_supported_handler)
-            }
+            _ => self
+                .find_for_method(&matching_routes, request.method())
+                .unwrap_or(handlers::method_not_supported_handler),
         }
     }
 
     /// Finds handler for given Hyper request.
     ///
-    /// It returns handler if it's found or `StatusCode` for error. 
-    /// This method may return `NotFound`, `MethodNotAllowed` or `NotImplemented` 
+    /// It returns handler if it's found or `StatusCode` for error.
+    /// This method may return `NotFound`, `MethodNotAllowed` or `NotImplemented`
     /// status codes.
     pub fn find_handler(&self, request: &Request) -> HttpResult<Handler> {
         let matching_routes = self.find_matching_routes(request.path());
         match matching_routes.len() {
             x if x <= 0 => Err(StatusCode::NotFound),
-            _ => {
-                self.find_for_method(&matching_routes, request.method())
-                    .map(|handler| Ok(handler))
-                    .unwrap_or(Err(StatusCode::MethodNotAllowed))
-            }
+            _ => self
+                .find_for_method(&matching_routes, request.method())
+                .map(|handler| Ok(handler))
+                .unwrap_or(Err(StatusCode::MethodNotAllowed)),
         }
     }
 
     /// Returns vector of `Route`s that match to given path.
     pub fn find_matching_routes(&self, request_path: &str) -> Vec<&Route> {
-        self.routes.iter()
-            .filter(|route| {
-                route.path.matcher.is_match(&request_path)
-            })
+        self.routes
+            .iter()
+            .filter(|route| route.path.matcher.is_match(&request_path))
             .collect()
     }
 
     fn find_for_method(&self, routes: &Vec<&Route>, method: &Method) -> Option<Handler> {
         let method = method.clone();
-        routes.iter()
+        routes
+            .iter()
             .find(|route| route.method == method)
             .map(|route| route.handler)
     }
@@ -150,14 +148,14 @@ impl Router {
 #[derive(Debug)]
 pub struct RouterService {
     pub router: Router,
-    pub error_handler: fn(StatusCode) -> Response
+    pub error_handler: fn(StatusCode) -> Response,
 }
 
 impl RouterService {
     pub fn new(router: Router) -> RouterService {
         RouterService {
             router,
-            error_handler: Self::default_error_handler
+            error_handler: Self::default_error_handler,
         }
     }
 
@@ -169,7 +167,7 @@ impl RouterService {
 
         match status_code {
             StatusCode::NotFound => response.with_status(StatusCode::NotFound),
-            _ => response.with_status(StatusCode::InternalServerError)
+            _ => response.with_status(StatusCode::InternalServerError),
         }
     }
 }
@@ -181,11 +179,9 @@ impl Service for RouterService {
     type Future = FutureResult<Response, hyper::Error>;
 
     fn call(&self, request: Request) -> Self::Future {
-        futures::future::ok(
-            match self.router.find_handler(&request) {
-                Ok(handler) => handler(request),
-                Err(status_code) => (self.error_handler)(status_code)
-            }
-        )
+        futures::future::ok(match self.router.find_handler(&request) {
+            Ok(handler) => handler(request),
+            Err(status_code) => (self.error_handler)(status_code),
+        })
     }
 }
