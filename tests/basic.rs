@@ -6,6 +6,7 @@ use hyper::server::{Request, Response};
 use hyper::Method;
 use hyper::Uri;
 use std::str::FromStr;
+use std::ops::Add;
 
 
 #[test]

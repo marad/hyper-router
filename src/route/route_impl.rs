@@ -72,7 +72,7 @@ impl Route {
 
     pub fn from(method: Method, path: &str) -> RouteBuilder {
         RouteBuilder::new(Route {
-            method: method,
+            method,
             path: Path::new(path),
             .. Route::default()
         })

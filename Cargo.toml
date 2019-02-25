@@ -7,6 +7,7 @@ repository = "https://github.com/marad/hyper-router"
 keywords = ["hyper", "router", "routing", "middleware"]
 documentation = "http://radoszewski.pl/hyper-router/0.2.0/hyper_router/"
 license = "MIT"
+edition = "2018"
 
 [[bin]]
 name = "test-server"

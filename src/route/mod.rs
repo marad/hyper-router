@@ -1,5 +1,5 @@
-mod route;
+mod route_impl;
 mod builder;
 
-pub use self::route::Route;
-pub use self::builder::RouteBuilder;
+pub use route_impl::Route;
+pub use builder::RouteBuilder;
