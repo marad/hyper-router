@@ -1,11 +1,11 @@
 [package]
 name = "hyper-router"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Marcin Radoszewski <moriturius@gmail.com>", "Alexander Mescheryakov <freecoder.xx@gmail.com>"]
 description = "Simple routing middleware for Hyper http library."
 repository = "https://github.com/marad/hyper-router"
 keywords = ["hyper", "router", "routing", "middleware"]
-documentation = "http://radoszewski.pl/hyper-router/0.2.0/hyper_router/"
+documentation = "http://radoszewski.pl/hyper-router/0.5.0/hyper_router/"
 license = "MIT"
 edition = "2018"
 
