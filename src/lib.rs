@@ -21,29 +21,37 @@
 //! extern crate hyper;
 //! extern crate hyper_router;
 //!
-//! use hyper::server::{Http, Request, Response};
-//! use hyper::header::{ContentLength, ContentType};
+//! use hyper::header::{CONTENT_LENGTH, CONTENT_TYPE};
+//! use hyper::{Request, Response, Body, Method};
+//! use hyper::server::Server;
+//! use hyper::rt::Future;
 //! use hyper_router::{Route, RouterBuilder, RouterService};
 //!
-//! fn basic_handler(_: Request) -> Response {
+//! fn request_handler(_: Request<Body>) -> Response<Body> {
 //!     let body = "Hello World";
-//!     Response::new()
-//!         .with_header(ContentLength(body.len() as u64))
-//!         .with_header(ContentType::plaintext())
-//!         .with_body(body)
+//!     Response::builder()
+//!         .header(CONTENT_LENGTH, body.len() as u64)
+//!         .header(CONTENT_TYPE, "text/plain")
+//!         .body(Body::from(body))
+//!         .expect("Failed to construct the response")
 //! }
 //!
 //! fn router_service() -> Result<RouterService, std::io::Error> {
 //!     let router = RouterBuilder::new()
-//!         .add(Route::get("/greet").using(basic_handler))
+//!         .add(Route::get("/hello").using(request_handler))
+//!         .add(Route::from(Method::PATCH, "/asd").using(request_handler))
 //!         .build();
+//!
 //!     Ok(RouterService::new(router))
 //! }
 //!
 //! fn main() {
 //!     let addr = "0.0.0.0:8080".parse().unwrap();
-//!     let server = Http::new().bind(&addr, router_service).unwrap();
-//!     server.run().unwrap();
+//!     let server = Server::bind(&addr)
+//!         .serve(router_service)
+//!         .map_err(|e| eprintln!("server error: {}", e));
+//!
+//!     hyper::rt::run(server)
 //! }
 //! ```
 //!
