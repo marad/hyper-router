@@ -204,7 +204,7 @@ dependencies = [
 
 [[package]]
 name = "hyper-router"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "futures 0.1.25 (registry+https://github.com/rust-lang/crates.io-index)",
  "hyper 0.12.24 (registry+https://github.com/rust-lang/crates.io-index)",
