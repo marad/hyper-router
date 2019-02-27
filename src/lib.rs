@@ -11,7 +11,8 @@
 //! To use the library just add:
 //!
 //! ```text
-//! hyper-router = "*"
+//! hyper = "^0.12"
+//! hyper-router = "^0.5"
 //! ```
 //!
 //! to your dependencies.
@@ -70,8 +71,10 @@ extern crate futures;
 extern crate hyper;
 
 use futures::future::FutureResult;
-use hyper::header::ContentLength;
-use hyper::server::{Request, Response, Service};
+use hyper::header::CONTENT_LENGTH;
+use hyper::{Request, Response, Body};
+use hyper::service::Service;
+
 use hyper::Method;
 use hyper::StatusCode;
 
@@ -85,7 +88,7 @@ pub use self::path::Path;
 pub use self::route::Route;
 pub use self::route::RouteBuilder;
 
-pub type Handler = fn(Request) -> Response;
+pub type Handler = fn(Request<Body>) -> Response<Body>;
 pub type HttpResult<T> = Result<T, StatusCode>;
 
 /// This is the one. The router.
@@ -101,8 +104,8 @@ impl Router {
     /// If the request does not match any route than default 404 handler is returned.
     /// If the request match some routes but http method does not match (used GET but routes are
     /// defined for POST) than default method not supported handler is returned.
-    pub fn find_handler_with_defaults(&self, request: &Request) -> Handler {
-        let matching_routes = self.find_matching_routes(request.path());
+    pub fn find_handler_with_defaults(&self, request: &Request<Body>) -> Handler {
+        let matching_routes = self.find_matching_routes(request.uri().path());
         match matching_routes.len() {
             x if x == 0 => handlers::default_404_handler,
             _ => self
@@ -116,14 +119,14 @@ impl Router {
     /// It returns handler if it's found or `StatusCode` for error.
     /// This method may return `NotFound`, `MethodNotAllowed` or `NotImplemented`
     /// status codes.
-    pub fn find_handler(&self, request: &Request) -> HttpResult<Handler> {
-        let matching_routes = self.find_matching_routes(request.path());
+    pub fn find_handler(&self, request: &Request<Body>) -> HttpResult<Handler> {
+        let matching_routes = self.find_matching_routes(request.uri().path());
         match matching_routes.len() {
-            x if x == 0 => Err(StatusCode::NotFound),
+            x if x == 0 => Err(StatusCode::NOT_FOUND),
             _ => self
                 .find_for_method(&matching_routes, request.method())
                 .map(Ok)
-                .unwrap_or(Err(StatusCode::MethodNotAllowed)),
+                .unwrap_or(Err(StatusCode::METHOD_NOT_ALLOWED)),
         }
     }
 
@@ -148,7 +151,7 @@ impl Router {
 #[derive(Debug)]
 pub struct RouterService {
     pub router: Router,
-    pub error_handler: fn(StatusCode) -> Response,
+    pub error_handler: fn(StatusCode) -> Response<Body>,
 }
 
 impl RouterService {
@@ -159,26 +162,26 @@ impl RouterService {
         }
     }
 
-    fn default_error_handler(status_code: StatusCode) -> Response {
+    fn default_error_handler(status_code: StatusCode) -> Response<Body> {
         let error = "Routing error: page not found";
-        let response = Response::new()
-            .with_header(ContentLength(error.len() as u64))
-            .with_body(error);
-
-        match status_code {
-            StatusCode::NotFound => response.with_status(StatusCode::NotFound),
-            _ => response.with_status(StatusCode::InternalServerError),
-        }
+        Response::builder()
+            .header(CONTENT_LENGTH, error.len() as u64)
+            .status(match status_code {
+                StatusCode::NOT_FOUND => StatusCode::NOT_FOUND,
+                _ => StatusCode::INTERNAL_SERVER_ERROR,
+            })
+            .body(Body::from(error))
+            .expect("Failed to construct a response")
     }
 }
 
 impl Service for RouterService {
-    type Request = Request;
-    type Response = Response;
+    type ReqBody = Body;
+    type ResBody = Body;
     type Error = hyper::Error;
-    type Future = FutureResult<Response, hyper::Error>;
+    type Future = FutureResult<Response<Body>, hyper::Error>;
 
-    fn call(&self, request: Request) -> Self::Future {
+    fn call(&mut self, request: Request<Self::ReqBody>) -> Self::Future {
         futures::future::ok(match self.router.find_handler(&request) {
             Ok(handler) => handler(request),
             Err(status_code) => (self.error_handler)(status_code),
