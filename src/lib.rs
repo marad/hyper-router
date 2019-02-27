@@ -80,8 +80,8 @@ extern crate hyper;
 
 use futures::future::FutureResult;
 use hyper::header::CONTENT_LENGTH;
-use hyper::{Request, Response, Body};
 use hyper::service::Service;
+use hyper::{Body, Request, Response};
 
 use hyper::Method;
 use hyper::StatusCode;

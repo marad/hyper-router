@@ -2,9 +2,9 @@ extern crate hyper;
 extern crate hyper_router;
 
 use hyper::header::{CONTENT_LENGTH, CONTENT_TYPE};
-use hyper::{Request, Response, Body, Method};
-use hyper::server::Server;
 use hyper::rt::Future;
+use hyper::server::Server;
+use hyper::{Body, Method, Request, Response};
 use hyper_router::{Route, RouterBuilder, RouterService};
 
 fn request_handler(_: Request<Body>) -> Response<Body> {

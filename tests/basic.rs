@@ -1,7 +1,7 @@
 extern crate hyper;
 extern crate hyper_router;
 
-use hyper::{Request, Response, Method, Uri, Body};
+use hyper::{Body, Method, Request, Response, Uri};
 use hyper_router::*;
 use std::str::FromStr;
 
@@ -71,7 +71,6 @@ fn test_post_route() {
 
 #[test]
 fn test_delete_route() {
-
     let request = Request::builder()
         .method(Method::DELETE)
         .uri(Uri::from_str("http://www.example.com/hello").unwrap())
@@ -216,7 +215,6 @@ fn test_patch_route() {
 
 #[test]
 fn test_no_route() {
-
     let request = Request::builder()
         .method(Method::GET)
         .uri(Uri::from_str("http://www.example.com/notfound").unwrap())

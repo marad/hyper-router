@@ -1,5 +1,5 @@
 use hyper::header::{CONTENT_LENGTH, CONTENT_TYPE};
-use hyper::{Request, Response, Body, StatusCode};
+use hyper::{Body, Request, Response, StatusCode};
 
 pub fn default_404_handler(_: Request<Body>) -> Response<Body> {
     let body = "page not found";
