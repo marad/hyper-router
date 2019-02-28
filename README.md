@@ -4,7 +4,7 @@ This cargo is a small extension to the great Hyper HTTP library. It basically is
 adds the ability to define routes to request handlers and then query for the handlers
 by request path.
 
-[API Documentation](http://radoszewski.pl/hyper-router/0.5.0/hyper_router/)
+[API Documentation](https://docs.rs/hyper-router/latest/hyper_router/)
 
 ## Usage
 
@@ -38,8 +38,7 @@ fn request_handler(_: Request<Body>) -> Response<Body> {
 
 fn router_service() -> Result<RouterService, std::io::Error> {
     let router = RouterBuilder::new()
-        .add(Route::get("/hello").using(request_handler))
-        .add(Route::from(Method::PATCH, "/asd").using(request_handler))
+        .add(Route::get("/greet").using(request_handler))
         .build();
 
     Ok(RouterService::new(router))
