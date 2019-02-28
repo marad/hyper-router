@@ -19,7 +19,7 @@ fn request_handler(_: Request<Body>) -> Response<Body> {
 fn router_service() -> Result<RouterService, std::io::Error> {
     let router = RouterBuilder::new()
         .add(Route::get("/hello").using(request_handler))
-        .add(Route::from(Method::PATCH, "/asd").using(request_handler))
+        .add(Route::from(Method::PATCH, "/world").using(request_handler))
         .build();
 
     Ok(RouterService::new(router))
