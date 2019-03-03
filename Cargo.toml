@@ -1,11 +1,11 @@
 [package]
 name = "hyper-router"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Marcin Radoszewski <moriturius@gmail.com>", "Alexander Mescheryakov <freecoder.xx@gmail.com>"]
 description = "Simple routing middleware for Hyper http library."
 repository = "https://github.com/marad/hyper-router"
 keywords = ["hyper", "router", "routing", "middleware"]
-documentation = "http://radoszewski.pl/hyper-router/0.2.0/hyper_router/"
+documentation = "https://docs.rs/hyper-router/latest/hyper_router/"
 license = "MIT"
 edition = "2018"
 
@@ -19,5 +19,5 @@ path = "src/lib.rs"
 
 [dependencies]
 futures = "^0.1"
-hyper = "^0.11"
+hyper = "^0.12"
 regex = "^0.2"
