@@ -27,7 +27,7 @@ use hyper::server::Server;
 use hyper::rt::Future;
 use hyper_router::{Route, RouterBuilder, RouterService};
 
-fn request_handler(_: Request<Body>) -> Response<Body> {
+fn basic_handler(_: Request<Body>) -> Response<Body> {
     let body = "Hello World";
     Response::builder()
         .header(CONTENT_LENGTH, body.len() as u64)
@@ -38,7 +38,7 @@ fn request_handler(_: Request<Body>) -> Response<Body> {
 
 fn router_service() -> Result<RouterService, std::io::Error> {
     let router = RouterBuilder::new()
-        .add(Route::get("/greet").using(request_handler))
+        .add(Route::get("/greet").using(basic_handler))
         .build();
 
     Ok(RouterService::new(router))
