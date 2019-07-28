@@ -52,9 +52,9 @@ impl Path {
                             };
                         }
 
-                        // We're out of segments to compare, so break.
+                        // We're out of segments to compare, so it's a match.
                         (None, None) => {
-                            break;
+                            return Some(RouteParameters::new(params));
                         }
 
                         // We have 1 Some and 1 None, meaning the route can't be a match
@@ -63,8 +63,6 @@ impl Path {
                         }
                     }
                 }
-
-                Some(RouteParameters::new(params))
             }
         }
     }
@@ -198,5 +196,12 @@ mod tests {
             let matches = path.matches("/hello/hello/h/e/l/l/o");
             assert_eq!(matches.is_none(), true);
         }
+    }
+
+    #[test]
+    fn test_parametric_path_with_variable_in_last_position_matches_multiple_segments_as_one() {
+        let path = Path::new("/files/:path");
+        let matches = path.matches("/files/home/user/file.text").unwrap();
+        assert_eq!(matches.parameters, vec!["home/user/file.text"]);
     }
 }
