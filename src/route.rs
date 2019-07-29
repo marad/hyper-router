@@ -92,13 +92,232 @@ mod tests {
     use super::*;
     use hyper::*;
 
+    fn expected_static_path() -> Path {
+        Path::Static("/foo".to_string())
+    }
+
+    fn expected_parametric_path() -> Path {
+        Path::Parametric(vec!["".to_string(), "foo".to_string(), ":id".to_string()])
+    }
+
     fn some_handler(_: Request<Body>) -> Response<Body> {
         unimplemented!()
     }
 
     #[test]
-    fn test_construct_get_route() {
-        let r = Route::get("/foo", some_handler);
-        assert_eq!(r.method, Method::GET);
+    fn test_construct_static_get_route() {
+        let r1 = Route::options("/foo", some_handler);
+        assert_eq!(r1.method, Method::OPTIONS);
+        assert_eq!(r1.path, expected_static_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::OPTIONS, "/foo", some_handler);
+        assert_eq!(r2.method, Method::OPTIONS);
+        assert_eq!(r2.path, expected_static_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
     }
+
+    #[test]
+    fn test_construct_static_options_route() {
+        let r1 = Route::get("/foo", some_handler);
+        assert_eq!(r1.method, Method::GET);
+        assert_eq!(r1.path, expected_static_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::GET, "/foo", some_handler);
+        assert_eq!(r2.method, Method::GET);
+        assert_eq!(r2.path, expected_static_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_static_post_route() {
+        let r1 = Route::post("/foo", some_handler);
+        assert_eq!(r1.method, Method::POST);
+        assert_eq!(r1.path, expected_static_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::POST, "/foo", some_handler);
+        assert_eq!(r2.method, Method::POST);
+        assert_eq!(r2.path, expected_static_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_static_put_route() {
+        let r1 = Route::put("/foo", some_handler);
+        assert_eq!(r1.method, Method::PUT);
+        assert_eq!(r1.path, expected_static_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::PUT, "/foo", some_handler);
+        assert_eq!(r2.method, Method::PUT);
+        assert_eq!(r2.path, expected_static_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_static_delete_route() {
+        let r1 = Route::delete("/foo", some_handler);
+        assert_eq!(r1.method, Method::DELETE);
+        assert_eq!(r1.path, expected_static_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::DELETE, "/foo", some_handler);
+        assert_eq!(r2.method, Method::DELETE);
+        assert_eq!(r2.path, expected_static_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_static_head_route() {
+        let r1 = Route::head("/foo", some_handler);
+        assert_eq!(r1.method, Method::HEAD);
+        assert_eq!(r1.path, expected_static_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::HEAD, "/foo", some_handler);
+        assert_eq!(r2.method, Method::HEAD);
+        assert_eq!(r2.path, expected_static_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_static_trace_route() {
+        let r1 = Route::trace("/foo", some_handler);
+        assert_eq!(r1.method, Method::TRACE);
+        assert_eq!(r1.path, expected_static_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::TRACE, "/foo", some_handler);
+        assert_eq!(r2.method, Method::TRACE);
+        assert_eq!(r2.path, expected_static_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_static_connect_route() {
+        let r1 = Route::connect("/foo", some_handler);
+        assert_eq!(r1.method, Method::CONNECT);
+        assert_eq!(r1.path, expected_static_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::CONNECT, "/foo", some_handler);
+        assert_eq!(r2.method, Method::CONNECT);
+        assert_eq!(r2.path, expected_static_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_static_patch_route() {
+        let r1 = Route::patch("/foo", some_handler);
+        assert_eq!(r1.method, Method::PATCH);
+        assert_eq!(r1.path, expected_static_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::PATCH, "/foo", some_handler);
+        assert_eq!(r2.method, Method::PATCH);
+        assert_eq!(r2.path, expected_static_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_parametric_get_route() {
+        let r1 = Route::options("/foo/:id", some_handler);
+        assert_eq!(r1.method, Method::OPTIONS);
+        assert_eq!(r1.path, expected_parametric_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::OPTIONS, "/foo/:id", some_handler);
+        assert_eq!(r2.method, Method::OPTIONS);
+        assert_eq!(r2.path, expected_parametric_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_parametric_options_route() {
+        let r1 = Route::get("/foo/:id", some_handler);
+        assert_eq!(r1.method, Method::GET);
+        assert_eq!(r1.path, expected_parametric_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::GET, "/foo/:id", some_handler);
+        assert_eq!(r2.method, Method::GET);
+        assert_eq!(r2.path, expected_parametric_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_parametric_post_route() {
+        let r1 = Route::post("/foo/:id", some_handler);
+        assert_eq!(r1.method, Method::POST);
+        assert_eq!(r1.path, expected_parametric_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::POST, "/foo/:id", some_handler);
+        assert_eq!(r2.method, Method::POST);
+        assert_eq!(r2.path, expected_parametric_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_parametric_put_route() {
+        let r1 = Route::put("/foo/:id", some_handler);
+        assert_eq!(r1.method, Method::PUT);
+        assert_eq!(r1.path, expected_parametric_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::PUT, "/foo/:id", some_handler);
+        assert_eq!(r2.method, Method::PUT);
+        assert_eq!(r2.path, expected_parametric_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_parametric_delete_route() {
+        let r1 = Route::delete("/foo/:id", some_handler);
+        assert_eq!(r1.method, Method::DELETE);
+        assert_eq!(r1.path, expected_parametric_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::DELETE, "/foo/:id", some_handler);
+        assert_eq!(r2.method, Method::DELETE);
+        assert_eq!(r2.path, expected_parametric_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_parametric_head_route() {
+        let r1 = Route::head("/foo/:id", some_handler);
+        assert_eq!(r1.method, Method::HEAD);
+        assert_eq!(r1.path, expected_parametric_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::HEAD, "/foo/:id", some_handler);
+        assert_eq!(r2.method, Method::HEAD);
+        assert_eq!(r2.path, expected_parametric_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_parametric_trace_route() {
+        let r1 = Route::trace("/foo/:id", some_handler);
+        assert_eq!(r1.method, Method::TRACE);
+        assert_eq!(r1.path, expected_parametric_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::TRACE, "/foo/:id", some_handler);
+        assert_eq!(r2.method, Method::TRACE);
+        assert_eq!(r2.path, expected_parametric_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_parametric_connect_route() {
+        let r1 = Route::connect("/foo/:id", some_handler);
+        assert_eq!(r1.method, Method::CONNECT);
+        assert_eq!(r1.path, expected_parametric_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::CONNECT, "/foo/:id", some_handler);
+        assert_eq!(r2.method, Method::CONNECT);
+        assert_eq!(r2.path, expected_parametric_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
+    #[test]
+    fn test_construct_parametric_patch_route() {
+        let r1 = Route::patch("/foo/:id", some_handler);
+        assert_eq!(r1.method, Method::PATCH);
+        assert_eq!(r1.path, expected_parametric_path());
+        assert_eq!(r1.handler as fn(_) -> _, some_handler as fn(_) -> _);
+        let r2 = Route::from(Method::PATCH, "/foo/:id", some_handler);
+        assert_eq!(r2.method, Method::PATCH);
+        assert_eq!(r2.path, expected_parametric_path());
+        assert_eq!(r2.handler as fn(_) -> _, some_handler as fn(_) -> _);
+    }
+
 }
