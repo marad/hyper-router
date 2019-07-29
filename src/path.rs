@@ -3,7 +3,7 @@ use crate::parameters::RouteParameters;
 /// Represents a path in HTTP sense (starting from `/`)
 /// This path is internal to the crate, and encapsulates the path matching
 /// logic of a route.
-#[derive(Debug, PartialEq)]
+#[derive(Debug)]
 pub(crate) enum Path {
     Static(String),
     Parametric(Vec<String>),

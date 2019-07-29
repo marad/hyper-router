@@ -92,6 +92,28 @@ mod tests {
     use super::*;
     use hyper::*;
 
+    impl PartialEq for Path {
+        fn eq(&self, other: &Self) -> bool {
+            match (self, other) {
+                (Path::Static(self_str), Path::Static(other_str)) => {
+                    return self_str == other_str;
+                }
+                (Path::Parametric(self_vec), Path::Parametric(other_vec)) => {
+                    if self_vec.len() != other_vec.len() {
+                        return false;
+                    }
+                    for (a, b) in self_vec.iter().zip(other_vec.iter()) {
+                        if a != b {
+                            return false;
+                        }
+                    }
+                    true
+                }
+                _ => false,
+            }
+        }
+    }
+
     fn expected_static_path() -> Path {
         Path::Static("/foo".to_string())
     }
