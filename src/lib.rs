@@ -8,13 +8,13 @@ use hyper::{Body, Request, Response};
 pub mod handlers;
 mod parameters;
 mod path;
-mod route;
+pub mod route;
 mod router;
 
 pub use self::parameters::RouteParameters;
 use self::path::Path;
-pub use self::route::Route;
-pub use self::router::Router;
+pub use self::route::{Route, RouteBuilder};
+pub use self::router::{Router, RouterBuilder};
 
 pub type Handler = fn(Request<Body>) -> Response<Body>;
 pub type HttpResult<T> = Result<T, StatusCode>;
@@ -65,7 +65,9 @@ mod tests {
                 .expect("Failed to construct the response")
         }
 
-        let router = Router::new().add(Route::get("/foo", get_foo_handler));
+        let router = RouterBuilder::new()
+            .add(Route::get("/foo").using(get_foo_handler))
+            .build();
 
         let mut svc = RouterService::new(router);
 
@@ -91,7 +93,7 @@ mod tests {
     fn test_router_service_passes_captured_parameters_to_handler_via_extensions() {
         fn get_foo_handler(req: Request<Body>) -> Response<Body> {
             let route_params: &RouteParameters = req.extensions().get().unwrap();
-            let id = route_params.parameters.iter().nth(0).unwrap();
+            let id = route_params.get("id").unwrap();
             let body = format!("FOO-{}", id);
             Response::builder()
                 .header(CONTENT_LENGTH, body.len() as u64)
@@ -100,7 +102,9 @@ mod tests {
                 .expect("Failed to construct the response")
         }
 
-        let router = Router::new().add(Route::get("/foo/:id", get_foo_handler));
+        let router = RouterBuilder::new()
+            .add(Route::get("/foo/:id").using(get_foo_handler))
+            .build();
 
         let mut svc = RouterService::new(router);
         let uri = Uri::from_str("http://www.example.com/foo/75bd8cfc-e421-48f8-93a1-57f423d254e6");

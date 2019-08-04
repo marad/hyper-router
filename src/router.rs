@@ -13,30 +13,35 @@ pub struct Router {
 }
 
 impl Router {
-    pub fn new() -> Router {
+    pub fn empty() -> Self {
+        Router::new(vec![])
+    }
+
+    pub fn new(routes: Vec<Route>) -> Router {
         Router {
-            routes: vec![],
+            routes,
             not_found_handler: handlers::default_404_handler,
             method_not_supported_handler: handlers::method_not_supported_handler,
         }
     }
 
-    pub fn not_found(mut self, handler: Handler) -> Router {
+    pub fn not_found(mut self, handler: Handler) -> Self {
         self.not_found_handler = handler;
         self
     }
 
-    pub fn method_not_supported(mut self, handler: Handler) -> Router {
+    pub fn method_not_supported(mut self, handler: Handler) -> Self {
         self.method_not_supported_handler = handler;
         self
     }
 
-    pub fn add(mut self, route: Route) -> Router {
+    pub fn add(mut self, route: Route) -> Self {
         self.routes.push(route);
         self
     }
 
     pub fn find_handler(&self, request: &Request<Body>) -> (Handler, RouteParameters) {
+        let mut path_match = None;
         let req_path = request.uri().path();
         let req_method = request.method();
         for route in &self.routes {
@@ -45,10 +50,74 @@ impl Router {
                 if route.method == req_method {
                     return (route.handler, matches.unwrap());
                 } else {
-                    return (self.method_not_supported_handler, matches.unwrap());
+                    path_match = matches;
                 }
             }
         }
-        (self.not_found_handler, RouteParameters::new(vec![]))
+        // At this point, no route matched both path AND method.
+        // if path_match is true, we return method_not_supported, otherwise,
+        // not found
+        return if path_match.is_some() {
+            (self.method_not_supported_handler, path_match.unwrap())
+        } else {
+            (self.not_found_handler, RouteParameters::none())
+        };
+    }
+}
+
+/// Builder for a router
+///
+/// Example usage:
+///
+#[derive(Debug)]
+pub struct RouterBuilder {
+    routes: Vec<Route>,
+    not_found_handler: Handler,
+    method_not_supported_handler: Handler,
+}
+
+impl RouterBuilder {
+    pub fn new() -> Self {
+        RouterBuilder {
+            routes: vec![],
+            not_found_handler: handlers::default_404_handler,
+            method_not_supported_handler: handlers::method_not_supported_handler,
+        }
+    }
+
+    /// Adds new `Route` for `Router` that is being built.
+    ///
+    /// Example:
+    ///
+    /// ```ignore
+    /// use hyper::server::{Request, Response};
+    /// use hyper_router::{Route, RouterBuilder};
+    ///
+    /// fn some_handler(_: Request) -> Response {
+    ///   // do something
+    /// }
+    ///
+    /// RouterBuilder::new().add(Route::get("/person/:id").using(some_handler));
+    /// ```
+    #[allow(clippy::should_implement_trait)]
+    pub fn add(mut self, route: Route) -> Self {
+        self.routes.push(route);
+        self
+    }
+
+    pub fn not_found(mut self, handler: Handler) -> Self {
+        self.not_found_handler = handler;
+        self
+    }
+
+    pub fn method_not_supported(mut self, handler: Handler) -> Self {
+        self.method_not_supported_handler = handler;
+        self
+    }
+
+    pub fn build(self) -> Router {
+        Router::new(self.routes)
+            .method_not_supported(self.method_not_supported_handler)
+            .not_found(self.not_found_handler)
     }
 }
