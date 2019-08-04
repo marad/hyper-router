@@ -25,5 +25,5 @@ hyper = "^0.12"
 criterion = "0.2"
 
 [[bench]]
-name = "parameter_capture"
+name = "matching"
 harness = false

@@ -22,6 +22,7 @@ fn create_router() -> Router {
         .add(Route::get("/g/:id").using(handler))
         .add(Route::get("/h/:id").using(handler))
         .add(Route::get("/a/:id").using(handler))
+        .add(Route::get("/static/route").using(handler))
         .build()
 }
 
@@ -30,6 +31,34 @@ fn run_benchmark(c: &mut Criterion) {
         let router = create_router();
         bench.iter(move || {
             let url = "http://a.com/a/b/c/d/e/f/g/h/i/g/h/i/j/k/l/m";
+            let req_uri = Uri::from_str(url).unwrap();
+            let request = Request::builder()
+                .method(Method::GET)
+                .uri(req_uri)
+                .body(Body::empty())
+                .unwrap();
+            router.find_handler(&request)
+        })
+    });
+
+    c.bench_function("capture single parameter", |bench| {
+        let router = create_router();
+        bench.iter(move || {
+            let url = "http://a.com/a/09879182c79isdcnvwevbyqw8e7vby2873rvby283rbvwqrb283r7238rcb2378brc2387bcrq283bcr823rc283rbc2387vbgr238crbg";
+            let req_uri = Uri::from_str(url).unwrap();
+            let request = Request::builder()
+                .method(Method::GET)
+                .uri(req_uri)
+                .body(Body::empty())
+                .unwrap();
+            router.find_handler(&request)
+        })
+    });
+
+    c.bench_function("match static route", |bench| {
+        let router = create_router();
+        bench.iter(move || {
+            let url = "http://a.com/static/route";
             let req_uri = Uri::from_str(url).unwrap();
             let request = Request::builder()
                 .method(Method::GET)
