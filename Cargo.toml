@@ -20,4 +20,10 @@ path = "src/lib.rs"
 [dependencies]
 futures = "^0.1"
 hyper = "^0.12"
-regex = "^0.2"
+
+[dev-dependencies]
+criterion = "0.2"
+
+[[bench]]
+name = "matching"
+harness = false
