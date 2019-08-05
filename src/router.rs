@@ -89,15 +89,21 @@ impl RouterBuilder {
     ///
     /// Example:
     ///
-    /// ```ignore
-    /// use hyper::server::{Request, Response};
+    /// ```rust
+    /// use hyper::{Request, Response, Body};
+    /// use hyper::header::{CONTENT_TYPE, CONTENT_LENGTH};
     /// use hyper_router::{Route, RouterBuilder};
     ///
-    /// fn some_handler(_: Request) -> Response {
-    ///   // do something
+    /// fn some_handler(_: Request<Body>) -> Response<Body> {
+    ///     let body = "Hello World";
+    ///     Response::builder()
+    ///         .header(CONTENT_LENGTH, body.len() as u64)
+    ///         .header(CONTENT_TYPE, "text/plain")
+    ///         .body(Body::from(body))
+    ///         .expect("Failed to construct the response")
     /// }
     ///
-    /// RouterBuilder::new().add(Route::get("/person/:id").using(some_handler));
+    /// RouterBuilder::new().add(Route::get("/hello").using(some_handler));
     /// ```
     #[allow(clippy::should_implement_trait)]
     pub fn add(mut self, route: Route) -> Self {
