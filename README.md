@@ -10,7 +10,7 @@ by request path.
 
 To use the library just add:
 
-```
+```toml
 hyper = "^0.12"
 hyper-router = "^0.5"
 ```
